@@ -5,6 +5,8 @@
 
 int main()
 {
+    Fecha a(2, 3, 5);
+    std::cout << "Hoy es " << a.dia << "/" << a.mes << "/" << a.anno << std::endl;
     std::time_t tiempo_calendario = std::time(nullptr);
     std::tm *tiempo_descompuesto = std::localtime(&tiempo_calendario);
     int dia = tiempo_descompuesto->tm_mday;

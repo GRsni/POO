@@ -3,7 +3,21 @@
 
 #include "fecha.hpp"
 
-Fecha::Fecha(int d, int m, int a) : dia(d), mes(m), anno(a) {}
+Fecha::Fecha(int d, int m, int a) : dia(d), mes(m), anno(a)
+{
+    if (dia == 0)
+    {
+        dia = getDiaActual();
+    }
+    if (mes == 0)
+    {
+        mes = getMesActual();
+    }
+    if (anno == 0)
+    {
+        anno = getAnnoActual();
+    }
+}
 
 Fecha::Fecha(int d, int m, int a) : dia(d), mes(m)
 {
