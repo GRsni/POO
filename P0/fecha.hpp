@@ -7,14 +7,17 @@
 class Fecha
 {
 public:
-    int dia, mes, anno;
+    Fecha(int d, int m, int a);
 
-    Fecha(int dia, int mes, int anno);
-    Fecha();
+    int getDia();
+    int getMes();
+    int getAnno();
 
     ~Fecha();
 
 private:
+    int dia, mes, anno;
+
     std::tm *getTiempoDesc();
     const int getDiaActual();
     const int getMesActual();

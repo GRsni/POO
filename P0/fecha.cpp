@@ -3,8 +3,12 @@
 
 #include "fecha.hpp"
 
-Fecha::Fecha(int d, int m, int a) : dia(d), mes(m), anno(a)
+Fecha::Fecha(int d = 0, int m = 0, int a = 0)
 {
+    dia = d;
+    mes = m;
+    anno = a;
+
     if (dia == 0)
     {
         dia = getDiaActual();
@@ -19,25 +23,23 @@ Fecha::Fecha(int d, int m, int a) : dia(d), mes(m), anno(a)
     }
 }
 
-Fecha::Fecha(int d, int m, int a) : dia(d), mes(m)
+int Fecha::getDia()
 {
-
-    if (a = 0)
-    {
-        anno = Fecha::getAnnoActual();
-    }
+    return dia;
 }
 
-Fecha::Fecha(int d, int m, int a) : dia(d)
+int Fecha::getMes()
 {
-    if (m == 0)
-    {
-        mes = Fecha::getMesActual();
-    }
-    if (a == 0)
-    {
-        anno = Fecha::getAnnoActual();
-    }
+    return mes;
+}
+
+int Fecha::getAnno()
+{
+    return anno;
+}
+
+Fecha::~Fecha()
+{
 }
 
 /****METODOS PRIVADOS****/
