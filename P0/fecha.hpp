@@ -7,11 +7,16 @@
 class Fecha
 {
 public:
-    Fecha(int d, int m, int a);
+    static const int AnnoMaximo = 2037;
+    static const int AnnoMinimo = 1972;
 
-    int getDia();
-    int getMes();
-    int getAnno();
+    explicit Fecha(int d = 0, int m = 0, int a = 0);
+    Fecha(const char in[]);
+
+    int getDia() const;
+    int getMes() const;
+    int getAnno() const;
+    void imprimeFecha() const;
 
     ~Fecha();
 

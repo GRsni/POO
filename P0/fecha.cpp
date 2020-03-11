@@ -1,13 +1,11 @@
 #include <iostream>
 #include <ctime>
+#include <cstdio>
 
 #include "fecha.hpp"
 
-Fecha::Fecha(int d = 0, int m = 0, int a = 0)
+Fecha::Fecha(int d, int m, int a) : dia(d), mes(m), anno(a)
 {
-    dia = d;
-    mes = m;
-    anno = a;
 
     if (dia == 0)
     {
@@ -23,19 +21,41 @@ Fecha::Fecha(int d = 0, int m = 0, int a = 0)
     }
 }
 
-int Fecha::getDia()
+Fecha::Fecha(const char in[])
+{
+    int d, m, a;
+    char separator1, separator2;
+    char format[] = u8"%d/%d/%4d";
+    int numCampos = sscanf(in, format, &d, &m, &a);
+    if (numCampos == 3)
+    {
+        *this = Fecha(d, m, a);
+    }
+    else
+    {
+        std::cout << "Parametros de entrada no validos." << std::endl;
+    }
+}
+
+int Fecha::getDia() const
 {
     return dia;
 }
 
-int Fecha::getMes()
+int Fecha::getMes() const
 {
     return mes;
 }
 
-int Fecha::getAnno()
+int Fecha::getAnno() const
 {
     return anno;
+}
+
+void Fecha::imprimeFecha() const
+{
+    std::cout << "Hoy es " << getDia()
+              << "/" << getMes() << "/" << getAnno() << std::endl;
 }
 
 Fecha::~Fecha()
