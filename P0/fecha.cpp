@@ -4,28 +4,60 @@
 
 #include "fecha.hpp"
 
-Fecha::Fecha(int d, int m, int a) : dia(d), mes(m), anno(a)
-{
+Fecha::Invalida::Invalida(const char mot[]) : motivo(mot) {}
 
-    if (dia == 0)
+void Fecha::Invalida::por_que()
+{
+    std::cerr << motivo << std::endl;
+}
+
+Fecha::Fecha(int d, int m, int a) : dia_(d), mes_(m), anno_(a)
+{
+    if (anno_ == 0)
     {
-        dia = getDiaActual();
+        anno_ = extraeAnno(getTiempoDesc());
     }
-    if (mes == 0)
+    else
     {
-        mes = getMesActual();
+        if (!esAnnoValido())
+        {
+            throw Invalida("ERROR: Anno fuera de rango valido.");
+        }
     }
-    if (anno == 0)
+
+    if (mes_ == 0)
     {
-        anno = getAnnoActual();
+        mes_ = extraeMes(getTiempoDesc());
+    }
+    else
+    {
+        if (!esMesValido())
+        {
+            throw Invalida("ERROR: Mes fuera de rango valido.");
+        }
+    }
+
+    if (dia_ == 0)
+    {
+        dia_ = extraeDia(getTiempoDesc());
+    }
+    else
+    {
+        //std::cout << mes << " tiene " << getDiasEnMes(mes) << "dias.\n";
+        if (!esDiaValido())
+        {
+            throw Invalida("ERROR: Dia no valido.");
+        }
     }
 }
+
+const std::string Fecha::nombreDias[] = {"domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"};
 
 Fecha::Fecha(const char in[])
 {
     int d, m, a;
     char separator1, separator2;
-    char format[] = u8"%d/%d/%4d";
+    char format[] = u8"%d/%d/%d";
     int numCampos = sscanf(in, format, &d, &m, &a);
     if (numCampos == 3)
     {
@@ -33,36 +65,68 @@ Fecha::Fecha(const char in[])
     }
     else
     {
-        std::cout << "Parametros de entrada no validos." << std::endl;
+        throw Invalida("Cadena de entrada no valida");
     }
 }
 
-int Fecha::getDia() const
+Fecha Fecha::operator+=(int n)
 {
-    return dia;
+    std::tm *tAux = getTiempoDesc();
+    tAux->tm_mday = dia_ + n;
+    tAux->tm_mon = mes_ - 1;
+    tAux->tm_year = anno_ - 1900;
+
+    std::time_t tiempo_cal = std::mktime(tAux);
+    tAux = std::localtime(&tiempo_cal);
+
+    dia_ = extraeDia(tAux);
+    mes_ = extraeMes(tAux);
+    anno_ = extraeAnno(tAux);
+
+    if (!esAnnoValido())
+    {
+        throw Invalida("ERROR: Anno fuera de rango valido.");
+    }
+
+    return *this;
 }
 
-int Fecha::getMes() const
+Fecha Fecha::operator-=(int n)
 {
-    return mes;
+    return *this += -n;
 }
 
-int Fecha::getAnno() const
+Fecha Fecha::operator++()
 {
-    return anno;
+    return *this += 1;
+}
+
+Fecha Fecha::operator--()
+{
+    return *this -= 1;
+}
+
+Fecha Fecha::operator++(int)
+{
+    Fecha f = *this;
+    *this += 1;
+    return f;
+}
+
+Fecha Fecha::operator--(int)
+{
+    Fecha f = *this;
+    *this -= 1;
+    return f;
 }
 
 void Fecha::imprimeFecha() const
 {
-    std::cout << "Hoy es " << getDia()
-              << "/" << getMes() << "/" << getAnno() << std::endl;
+    std::cout << "Hoy es " << Fecha::dia()
+              << "/" << Fecha::mes() << "/" << Fecha::anno() << std::endl;
 }
 
-Fecha::~Fecha()
-{
-}
-
-/****METODOS PRIVADOS****/
+/***********************METODOS PRIVADOS**************************************/
 
 std::tm *Fecha::getTiempoDesc()
 {
@@ -70,20 +134,60 @@ std::tm *Fecha::getTiempoDesc()
     return std::localtime(&tiempo_calendario);
 }
 
-const int Fecha::getDiaActual()
+const int Fecha::extraeDia(const std::tm *t)
 {
-    std::tm *tiempo_descompuesto = Fecha::getTiempoDesc();
-    return tiempo_descompuesto->tm_mday;
+    return t->tm_mday;
 }
 
-const int Fecha::getMesActual()
+const int Fecha::extraeMes(const std::tm *t)
 {
-    std::tm *tiempo_descompuesto = Fecha::getTiempoDesc();
-    return tiempo_descompuesto->tm_mon + 1;
+    return t->tm_mon + 1;
 }
 
-const int Fecha::getAnnoActual()
+const int Fecha::extraeAnno(const std::tm *t)
 {
-    std::tm *tiempo_descompuesto = Fecha::getTiempoDesc();
-    return tiempo_descompuesto->tm_year + 1900;
+    return t->tm_year + 1900;
+}
+
+const int Fecha::getDiasEnMes(int mes)
+{
+    if (mes <= Fecha::JULIO)
+    {
+        if (mes == Fecha::FEBRERO)
+        {
+            return esAnnoBisiesto(anno_) ? 29 : 28;
+        }
+        else
+        {
+            return mes % 2 == 0 ? 30 : 31;
+        }
+    }
+    else
+    {
+        return mes % 2 == 0 ? 31 : 30;
+    }
+}
+
+const bool Fecha::esFechaValida()
+{
+    return esDiaValido() && esMesValido() && esAnnoValido();
+}
+
+const bool Fecha::esAnnoValido()
+{
+    return anno_ >= AnnoMinimo && anno_ <= AnnoMaximo;
+}
+
+const bool Fecha::esMesValido()
+{
+    return mes_ >= Fecha::ENERO && mes_ <= Fecha::DICIEMBRE;
+}
+
+const bool Fecha::esDiaValido()
+{
+    return dia_ >= 1 && dia_ <= getDiasEnMes(mes_);
+}
+bool Fecha::esAnnoBisiesto(int a)
+{
+    return a % 4 == 0 && (a % 400 == 0 || a % 100 != 0);
 }

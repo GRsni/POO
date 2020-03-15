@@ -6,6 +6,9 @@ CXXFLAGS=-std=c++11
 test_fecha: test_fecha.o fecha.o
 	$(CXX) $(CXXFLAGS) -o test_fecha test_fecha.o fecha.o
 
+test_fecha_w: test_fecha.o fecha.o
+	$(CXX) $(CXXFLAGS) -o test_fecha.exe test_fecha.o fecha.o
+
 test_fecha.o: test_fecha.cpp
 	$(CXX) $(CXXFLAGS) -c test_fecha.cpp
 
@@ -13,9 +16,12 @@ fecha.o: fecha.cpp fecha.hpp
 	$(CXX) $(CXXFLAGS) -c fecha.cpp fecha.hpp
 
 clean:
-	rm -f test_fecha test_fecha.o fecha.hpp.gch fecha.o fecha.hpp.gch core *~
+	rm -f test_fecha test_fecha.o fecha.hpp.gch fecha.o core *~
 
-cheks: fecha_check cadena_check
+clean_w:
+	del test_fecha.exe test_fecha.o fecha.hpp.gch fecha.o core
+
+checks: fecha_check cadena_check
 
 fecha_check:
 	${MAKE} -f Make_check.mk $@
