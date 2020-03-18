@@ -30,8 +30,8 @@ int main()
     {
         Fecha armagedon(31, 12, Fecha::AnnoMaximo),
             big_bang(1, 1, Fecha::AnnoMinimo);
-        // armagedon++;  // Error, desbordamiento superior en armagedon
-        big_bang - 3; // Error, desbordamiento inferior en la Fecha devuelta
+        armagedon++; // Error, desbordamiento superior en armagedon
+        //big_bang - 3; // Error, desbordamiento inferior en la Fecha devuelta
     }
     catch (Fecha::Invalida e)
     {

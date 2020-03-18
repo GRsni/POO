@@ -126,7 +126,7 @@ void Fecha::imprimeFecha() const
               << "/" << Fecha::mes() << "/" << Fecha::anno() << std::endl;
 }
 
-/***********************METODOS PRIVADOS**************************************/
+/**********************************METODOS PRIVADOS**************************************/
 
 std::tm *Fecha::getTiempoDesc()
 {
