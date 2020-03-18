@@ -77,11 +77,11 @@ Fecha Fecha::operator+=(int n)
     tAux->tm_year = anno_ - 1900;
 
     std::time_t tiempo_cal = std::mktime(tAux);
-    tAux = std::localtime(&tiempo_cal);
+    std::tm *t = std::localtime(&tiempo_cal);
 
-    dia_ = extraeDia(tAux);
-    mes_ = extraeMes(tAux);
-    anno_ = extraeAnno(tAux);
+    dia_ = extraeDia(t);
+    mes_ = extraeMes(t);
+    anno_ = extraeAnno(t);
 
     if (!esAnnoValido())
     {
@@ -103,7 +103,7 @@ Fecha Fecha::operator++()
 
 Fecha Fecha::operator--()
 {
-    return *this -= 1;
+    return *this += -1;
 }
 
 Fecha Fecha::operator++(int)
@@ -116,8 +116,22 @@ Fecha Fecha::operator++(int)
 Fecha Fecha::operator--(int)
 {
     Fecha f = *this;
-    *this -= 1;
+    *this += -1;
     return f;
+}
+
+Fecha Fecha::operator+(int n)
+{
+    Fecha aux(*this);
+    aux += n;
+    return aux;
+}
+
+Fecha Fecha::operator-(int n)
+{
+    Fecha aux(*this);
+    aux += -n;
+    return aux;
 }
 
 void Fecha::imprimeFecha() const
@@ -128,23 +142,23 @@ void Fecha::imprimeFecha() const
 
 /**********************************METODOS PRIVADOS**************************************/
 
-std::tm *Fecha::getTiempoDesc()
+std::tm *Fecha::getTiempoDesc() const
 {
     std::time_t tiempo_calendario = std::time(nullptr);
     return std::localtime(&tiempo_calendario);
 }
 
-const int Fecha::extraeDia(const std::tm *t)
+int Fecha::extraeDia(const std::tm *t) const
 {
     return t->tm_mday;
 }
 
-const int Fecha::extraeMes(const std::tm *t)
+int Fecha::extraeMes(const std::tm *t) const
 {
     return t->tm_mon + 1;
 }
 
-const int Fecha::extraeAnno(const std::tm *t)
+int Fecha::extraeAnno(const std::tm *t) const
 {
     return t->tm_year + 1900;
 }

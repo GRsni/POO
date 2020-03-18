@@ -27,16 +27,8 @@ public:
     Fecha operator--();
     Fecha operator++(int);
     Fecha operator--(int);
-    friend Fecha operator+(Fecha f, int n)
-    {
-        f += n;
-        return f;
-    }
-    friend Fecha operator-(Fecha f, int n)
-    {
-        f += -n;
-        return f;
-    }
+    Fecha operator+(int n);
+    Fecha operator-(int n);
     Fecha operator+=(int n);
     Fecha operator-=(int n);
 
@@ -67,10 +59,10 @@ private:
     static const std::string nombreDias[7];
     int dia_, mes_, anno_;
 
-    std::tm *getTiempoDesc();
-    const int extraeDia(const std::tm *t);
-    const int extraeMes(const std::tm *t);
-    const int extraeAnno(const std::tm *t);
+    std::tm *getTiempoDesc() const;
+    int extraeDia(const std::tm *t) const;
+    int extraeMes(const std::tm *t) const;
+    int extraeAnno(const std::tm *t) const;
 
     const bool esFechaValida();
     const bool esDiaValido();
