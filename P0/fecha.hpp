@@ -22,6 +22,7 @@ public:
 
     explicit Fecha(int d = 0, int m = 0, int a = 0);
     Fecha(const char in[]);
+    operator const char *() const;
 
     Fecha operator++();
     Fecha operator--();
@@ -31,6 +32,13 @@ public:
     Fecha operator-(int n);
     Fecha operator+=(int n);
     Fecha operator-=(int n);
+
+    bool operator==(const Fecha &F);
+    bool operator!=(const Fecha &F);
+    bool operator<(const Fecha &F);
+    bool operator>(const Fecha &F);
+    bool operator<=(const Fecha &F);
+    bool operator>=(const Fecha &F);
 
     int dia() const { return dia_; };
     int mes() const { return mes_; };
@@ -56,10 +64,11 @@ private:
         DICIEMBRE
     };
 
-    static const std::string nombreDias[7];
     int dia_, mes_, anno_;
+    mutable char salida[35];
 
     std::tm *getTiempoDesc() const;
+    std::tm *getTiempoDescNormalizado(const int d, const int m, const int a) const;
     int extraeDia(const std::tm *t) const;
     int extraeMes(const std::tm *t) const;
     int extraeAnno(const std::tm *t) const;

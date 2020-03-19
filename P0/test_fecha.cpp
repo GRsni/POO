@@ -7,11 +7,15 @@ int main()
 {
     try
     {
-        Fecha armagedon(30, 12, Fecha::AnnoMaximo), big_bang(2, 1, Fecha::AnnoMinimo);
-        armagedon++; // Error, desbordamiento superior en armagedon
-        armagedon.imprimeFecha();
-        big_bang.imprimeFecha();
-        //armagedon = big_bang + 1; // Error, desbordamiento inferior en la Fecha devuelta
+        Fecha a(10, 10, 2010), b(11, 10, 2010), c(10, 11, 2010), hoy;
+        std::cout << a << "<" << b << " " << (a < b) << std::endl;
+        std::cout << a << ">" << b << " " << (a > b) << std::endl;
+        std::cout << a << "<" << a << " " << (a < a) << std::endl;
+        std::cout << a << ">" << a << " " << (a < a) << std::endl;
+        std::cout << a << ">=" << b << " " << (a <= b) << std::endl;
+        std::cout << a << ">" << c << " " << (a < c) << std::endl;
+        std::cout << a << "<=" << b << " " << (a <= b) << std::endl;
+        std::cout << Fecha() << "==" << hoy << " " << (Fecha() == hoy) << std::endl;
     }
     catch (Fecha::Invalida e)
     {
