@@ -1,6 +1,8 @@
 #ifndef CADENA_HPP
 #define CADENA_HPP
 
+#include <cstddef>
+
 class Cadena
 {
 public:
@@ -8,7 +10,9 @@ public:
     Cadena(const char *cad);
     Cadena(const Cadena &C);
 
-    
+    inline operator const char *() const { return s_; };
+    inline size_t length() const { return tam_; };
+
     ~Cadena();
 
 private:

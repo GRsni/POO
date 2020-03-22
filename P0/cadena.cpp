@@ -14,21 +14,18 @@ Cadena::Cadena(int tam, char c) : tam_(tam)
             s_[i] = c;
         }
     }
-    std::cout << "Tam: " << tam_ << " Cadena: " << s_ << "." << std::endl;
 }
 
 Cadena::Cadena(const char cad[]) : tam_(std::strlen(cad))
 {
     s_ = new char[tam_ + 1];
     std::strcpy(s_, cad);
-    std::cout << "Tam: " << tam_ << " Cadena: " << s_ << "." << std::endl;
 }
 
 Cadena::Cadena(const Cadena &C) : tam_(C.tam_)
 {
     s_ = new char[tam_ + 1];
     std::strcpy(s_, C.s_);
-    std::cout << "Tam: " << tam_ << " Cadena: " << s_ << "." << std::endl;
 }
 
 Cadena::~Cadena()
