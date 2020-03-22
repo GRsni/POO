@@ -3,17 +3,20 @@ all: test_fecha
 CXX=g++
 CXXFLAGS=-std=c++11 -ggdb
 
-test_fecha: test_fecha.o fecha.o
-	$(CXX) $(CXXFLAGS) -o test_fecha test_fecha.o fecha.o
+tests: tests.o fecha.o cadena.o
+	$(CXX) $(CXXFLAGS) -o tests tests.o fecha.o cadena.o
 
-test_fecha_w: test_fecha.o fecha.o
-	$(CXX) $(CXXFLAGS) -o test_fecha.exe test_fecha.o fecha.o
+tests_w: tests.o fecha.o cadena.o
+	$(CXX) $(CXXFLAGS) -o tests.exe tests.o fecha.o cadena.o
 
-test_fecha.o: test_fecha.cpp
-	$(CXX) $(CXXFLAGS) -c test_fecha.cpp
+tests.o: tests.cpp
+	$(CXX) $(CXXFLAGS) -c tests.cpp
 
 fecha.o: fecha.cpp fecha.hpp
 	$(CXX) $(CXXFLAGS) -c fecha.cpp fecha.hpp
+
+cadena.o: cadena.cpp cadena.hpp
+	$(CXX) $(CXXFLAGS) -c cadena.cpp cadena.hpp
 
 checks: fecha_check cadena_check
 
@@ -30,7 +33,7 @@ check_Cadena:
 	${MAKE} -f Make_check.mk $@
 
 clean:
-	rm -f test_fecha test_fecha.o fecha.hpp.gch fecha.o core *~
+	rm -f tests tests.o fecha.hpp.gch fecha.o cadena.o cadena.hpp.gch core *~
 
 clean_w:
-	del test_fecha.exe test_fecha.o fecha.hpp.gch fecha.o core
+	del tests.exe tests.o fecha.hpp.gch fecha.o  cadena.hpp.gch cadena.o core

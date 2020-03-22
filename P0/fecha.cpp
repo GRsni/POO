@@ -56,7 +56,6 @@ const std::string Fecha::nombreDias[] = {"domingo", "lunes", "martes", "miércol
 Fecha::Fecha(const char in[])
 {
     int d, m, a;
-    char separator1, separator2;
     char format[] = u8"%d/%d/%d";
     int numCampos = sscanf(in, format, &d, &m, &a);
     if (numCampos == 3)
