@@ -43,7 +43,6 @@ Fecha::Fecha(int d, int m, int a) : dia_(d), mes_(m), anno_(a)
     }
     else
     {
-        //std::cout << mes << " tiene " << getDiasEnMes(mes) << "dias.\n";
         if (!esDiaValido())
         {
             throw Invalida("ERROR: Dia no valido.");
@@ -51,7 +50,13 @@ Fecha::Fecha(int d, int m, int a) : dia_(d), mes_(m), anno_(a)
     }
 }
 
-const std::string Fecha::nombreDias[] = {"domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"};
+Fecha::operator const char *() const
+{
+    std::locale::global(std::locale("es_ES.UTF-8"));
+    std::tm *t = getTiempoDescNormalizado(dia_, mes_, anno_);
+    std::strftime(salida, 35, "%A %d de %B de %Y", t);
+    return salida;
+}
 
 Fecha::Fecha(const char in[])
 {
@@ -70,13 +75,7 @@ Fecha::Fecha(const char in[])
 
 Fecha Fecha::operator+=(int n)
 {
-    std::tm *tAux = getTiempoDesc();
-    tAux->tm_mday = dia_ + n;
-    tAux->tm_mon = mes_ - 1;
-    tAux->tm_year = anno_ - 1900;
-
-    std::time_t tiempo_cal = std::mktime(tAux);
-    std::tm *t = std::localtime(&tiempo_cal);
+    std::tm *t = getTiempoDescNormalizado(dia_ + n, mes_, anno_);
 
     dia_ = extraeDia(t);
     mes_ = extraeMes(t);
@@ -133,10 +132,63 @@ Fecha Fecha::operator-(int n)
     return aux;
 }
 
-void Fecha::imprimeFecha() const
+bool Fecha::operator==(const Fecha &F)
 {
-    std::cout << "Hoy es " << Fecha::dia()
-              << "/" << Fecha::mes() << "/" << Fecha::anno() << std::endl;
+    return dia_ == F.dia() && mes_ == F.mes() && anno_ == F.anno();
+}
+
+bool Fecha::operator!=(const Fecha &F)
+{
+    return !(*this == F);
+}
+
+bool Fecha::operator<(const Fecha &F)
+{
+    if (anno_ > F.anno())
+    {
+        return false;
+    }
+    else if (anno_ < F.anno())
+    {
+        return true;
+    }
+    else
+    {
+        if (mes_ > F.mes())
+        {
+            return false;
+        }
+        else if (mes_ < F.mes())
+        {
+            return true;
+        }
+        else
+        {
+            if (dia_ < F.dia())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+}
+
+bool Fecha::operator>(const Fecha &F)
+{
+    return F < *this;
+}
+
+bool Fecha::operator<=(const Fecha &F)
+{
+    return !(F < *this);
+}
+
+bool Fecha::operator>=(const Fecha &F)
+{
+    return !(*this < F);
 }
 
 /**********************************METODOS PRIVADOS**************************************/
@@ -145,6 +197,17 @@ std::tm *Fecha::getTiempoDesc() const
 {
     std::time_t tiempo_calendario = std::time(nullptr);
     return std::localtime(&tiempo_calendario);
+}
+
+std::tm *Fecha::getTiempoDescNormalizado(const int d, const int m, const int a) const
+{
+    std::tm *tAux = getTiempoDesc();
+    tAux->tm_mday = d;
+    tAux->tm_mon = m - 1;
+    tAux->tm_year = a - 1900;
+
+    std::time_t tiempo_cal = std::mktime(tAux);
+    return std::localtime(&tiempo_cal);
 }
 
 int Fecha::extraeDia(const std::tm *t) const
