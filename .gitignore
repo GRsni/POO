@@ -1,4 +1,8 @@
 .vscode/
 *.o
 *.pdf
+*.gch
+*.exe
 entregables/
+dsl-comprobaciones/
+Tests-auto/

@@ -1,7 +1,7 @@
 all: test_fecha
 
 CXX=g++
-CXXFLAGS=-std=c++11 -ggdb
+CXXFLAGS=-std=c++11 -ggdb -Wall
 
 tests: tests.o fecha.o cadena.o
 	$(CXX) $(CXXFLAGS) -o tests tests.o fecha.o cadena.o
