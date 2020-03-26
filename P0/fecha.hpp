@@ -14,7 +14,7 @@ public:
     {
     public:
         Invalida(const char mot[]);
-        void por_que();
+        std::string por_que() { return motivo; };
 
     private:
         const char *motivo;
@@ -32,13 +32,6 @@ public:
     Fecha operator-(int n);
     Fecha operator+=(int n);
     Fecha operator-=(int n);
-
-    bool operator==(const Fecha &F);
-    bool operator!=(const Fecha &F);
-    bool operator<(const Fecha &F);
-    bool operator>(const Fecha &F);
-    bool operator<=(const Fecha &F);
-    bool operator>=(const Fecha &F);
 
     int dia() const { return dia_; };
     int mes() const { return mes_; };
@@ -83,5 +76,12 @@ private:
     const int getDiasEnMes(int mes);
     bool esAnnoBisiesto(int anno);
 };
+
+bool operator==(const Fecha &A, const Fecha &B);
+bool operator!=(const Fecha &A, const Fecha &B);
+bool operator<(const Fecha &A, const Fecha &B);
+bool operator>(const Fecha &A, const Fecha &B);
+bool operator<=(const Fecha &A, const Fecha &B);
+bool operator>=(const Fecha &A, const Fecha &B);
 
 #endif //FECHA_H

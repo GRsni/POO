@@ -1,7 +1,13 @@
-all: test_fecha
+all: tests
 
-CXX=g++
-CXXFLAGS=-std=c++11 -ggdb -Wall
+CXX=clang++
+CXXFLAGS=-std=c++11 -ggdb -Wall -pedantic
+
+test_auto: test-P0-consola.o fecha.o cadena.o
+	$(CXX) $(CXXFLAGS) -o test_a test-P0-consola.o fecha.o cadena.o
+
+test_auto.o:
+	$(CXX) $(CXXFLAGS) -c test-P0-consola-cpp
 
 tests: tests.o fecha.o cadena.o
 	$(CXX) $(CXXFLAGS) -o tests tests.o fecha.o cadena.o
@@ -33,7 +39,7 @@ check_Cadena:
 	${MAKE} -f Make_check.mk $@
 
 clean:
-	rm -f tests tests.o fecha.hpp.gch fecha.o cadena.o cadena.hpp.gch core *~
+	rm -f tests tests.o fecha.hpp.gch fecha.o cadena.o cadena.hpp.gch test-P0-consola.o test_a core *~
 
 clean_w:
 	del tests.exe tests.o fecha.hpp.gch fecha.o  cadena.hpp.gch cadena.o core

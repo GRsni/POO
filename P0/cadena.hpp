@@ -16,7 +16,13 @@ public:
     inline size_t length() const { return tam_; };
 
     Cadena operator+=(const Cadena &B);
-    Cadena operator+(const Cadena &C);
+
+    const char operator[](size_t n) const;
+    char &operator[](size_t n);
+    const char at(size_t n) const;
+    char &at(size_t n);
+
+    Cadena substr(size_t index, size_t tam);
 
     ~Cadena();
 

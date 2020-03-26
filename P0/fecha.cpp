@@ -6,11 +6,6 @@
 
 Fecha::Invalida::Invalida(const char mot[]) : motivo(mot) {}
 
-void Fecha::Invalida::por_que()
-{
-    std::cerr << motivo << std::endl;
-}
-
 Fecha::Fecha(int d, int m, int a) : dia_(d), mes_(m), anno_(a)
 {
     if (anno_ == 0)
@@ -132,39 +127,41 @@ Fecha Fecha::operator-(int n)
     return aux;
 }
 
-bool Fecha::operator==(const Fecha &F)
+bool operator==(const Fecha &A, const Fecha &B)
 {
-    return dia_ == F.dia() && mes_ == F.mes() && anno_ == F.anno();
+    return A.dia() == B.dia() &&
+           A.mes() == B.mes() &&
+           A.anno() == B.anno();
 }
 
-bool Fecha::operator!=(const Fecha &F)
+bool operator!=(const Fecha &A, const Fecha &B)
 {
-    return !(*this == F);
+    return !(A == B);
 }
 
-bool Fecha::operator<(const Fecha &F)
+bool operator<(const Fecha &A, const Fecha &B)
 {
-    if (anno_ > F.anno())
+    if (A.anno() > B.anno())
     {
         return false;
     }
-    else if (anno_ < F.anno())
+    else if (A.anno() < B.anno())
     {
         return true;
     }
     else
     {
-        if (mes_ > F.mes())
+        if (A.mes() > B.mes())
         {
             return false;
         }
-        else if (mes_ < F.mes())
+        else if (A.mes() < B.mes())
         {
             return true;
         }
         else
         {
-            if (dia_ < F.dia())
+            if (A.dia() < B.dia())
             {
                 return true;
             }
@@ -176,19 +173,19 @@ bool Fecha::operator<(const Fecha &F)
     }
 }
 
-bool Fecha::operator>(const Fecha &F)
+bool operator>(const Fecha &A, const Fecha &B)
 {
-    return F < *this;
+    return B < A;
 }
 
-bool Fecha::operator<=(const Fecha &F)
+bool operator<=(const Fecha &A, const Fecha &B)
 {
-    return !(F < *this);
+    return !(B < A);
 }
 
-bool Fecha::operator>=(const Fecha &F)
+bool operator>=(const Fecha &A, const Fecha &B)
 {
-    return !(*this < F);
+    return !(A < B);
 }
 
 /**********************************METODOS PRIVADOS**************************************/
