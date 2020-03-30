@@ -3,21 +3,21 @@
 
 #include "cadena.hpp"
 
-Cadena::Cadena(int tam, char c) : tam_(tam)
+Cadena::Cadena(size_t tam, char c) : tam_(tam)
 {
-    s_ = new char[tam_ + 1];
-    s_[tam] = 0;
-    if (tam > 0)
+    s_ = new char[tam_ + 1]{0};
+    for (int i = 0; i < tam_; i++)
     {
-        for (int i = 0; i < tam_; i++)
-        {
-            s_[i] = c;
-        }
+        s_[i] = c;
     }
 }
 
-Cadena::Cadena(const char *cad) : tam_(std::strlen(cad))
+Cadena::Cadena(const char *cad)
 {
+    if (cad != nullptr)
+    {
+        tam_ = strlen(cad);
+    }
     s_ = new char[tam_ + 1];
     std::strcpy(s_, cad);
 }
@@ -50,9 +50,9 @@ char &Cadena::operator[](size_t n)
     return s_[n];
 }
 
-const char Cadena::at(size_t n) const
+char Cadena::at(size_t n) const
 {
-    if (n > tam_ - 1)
+    if (n >= tam_)
     {
         throw std::out_of_range("Indice fuera del rango.");
     }
@@ -64,7 +64,7 @@ const char Cadena::at(size_t n) const
 
 char &Cadena::at(size_t n)
 {
-    if (n > tam_ - 1)
+    if (n >= tam_)
     {
         throw std::out_of_range("Indice fuera del rango");
     }
@@ -74,7 +74,7 @@ char &Cadena::at(size_t n)
     }
 }
 
-Cadena Cadena::substr(size_t index, size_t tam)
+Cadena Cadena::substr(size_t index, size_t tam) const
 {
     if (index >= tam_ || index > tam_ - index)
     {
@@ -82,22 +82,21 @@ Cadena Cadena::substr(size_t index, size_t tam)
     }
     else
     {
-        char *subcad = new char[tam];
-        strncpy(subcad, s_ + tam, tam + 1);
+        static char *subcad = new char[tam + 1]{0};
+        strncpy(subcad, s_ + index, tam);
         return Cadena(subcad);
     }
 }
 
-Cadena Cadena::operator+=(const Cadena &B)
+Cadena &Cadena::operator+=(const Cadena &B)
 {
-    tam_ += B.length() + 1;
-    char *aux = new char[tam_ + 1];
-    std::strcpy(aux, s_);
-    std::strcat(aux, B.s_);
+    char *copia = new char[tam_ + 1];
+    std::strcpy(copia, s_);
     delete[] s_;
-    s_ = new char[tam_];
-    strcpy(s_, aux);
-    delete[] aux;
+    tam_ += B.length();
+    s_ = new char[tam_ + 1];
+    sprintf(s_, "%s%s", copia, B.s_);
+    delete[] copia;
     return *this;
 }
 

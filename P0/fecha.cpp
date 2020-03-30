@@ -4,8 +4,6 @@
 
 #include "fecha.hpp"
 
-Fecha::Invalida::Invalida(const char mot[]) : motivo(mot) {}
-
 Fecha::Fecha(int d, int m, int a) : dia_(d), mes_(m), anno_(a)
 {
     if (anno_ == 0)
@@ -16,7 +14,7 @@ Fecha::Fecha(int d, int m, int a) : dia_(d), mes_(m), anno_(a)
     {
         if (!esAnnoValido())
         {
-            throw Invalida("ERROR: Anno fuera de rango valido.");
+            throw Fecha::Invalida("ERROR: Anno fuera de rango valido.");
         }
     }
 
@@ -28,7 +26,7 @@ Fecha::Fecha(int d, int m, int a) : dia_(d), mes_(m), anno_(a)
     {
         if (!esMesValido())
         {
-            throw Invalida("ERROR: Mes fuera de rango valido.");
+            throw Fecha::Invalida("ERROR: Mes fuera de rango valido.");
         }
     }
 
@@ -40,16 +38,23 @@ Fecha::Fecha(int d, int m, int a) : dia_(d), mes_(m), anno_(a)
     {
         if (!esDiaValido())
         {
-            throw Invalida("ERROR: Dia no valido.");
+            throw Fecha::Invalida("ERROR: Dia no valido.");
         }
     }
 }
 
-Fecha::operator const char *() const
+Fecha::operator const char *() const noexcept
 {
     std::locale::global(std::locale("es_ES.UTF-8"));
-    std::tm *t = getTiempoDescNormalizado(dia_, mes_, anno_);
-    std::strftime(salida, 35, "%A %d de %B de %Y", t);
+
+    std::tm tAux{0};
+    tAux.tm_mday = dia_;
+    tAux.tm_mon = mes_ - 1;
+    tAux.tm_year = anno_ - 1900;
+
+    std::mktime(&tAux);
+    static char salida[36]{0};
+    std::strftime(salida, 36, "%A %d de %B de %Y", &tAux);
     return salida;
 }
 
@@ -64,82 +69,87 @@ Fecha::Fecha(const char in[])
     }
     else
     {
-        throw Invalida("Cadena de entrada no valida");
+        throw Fecha::Invalida("Cadena de entrada no valida");
     }
 }
 
-Fecha Fecha::operator+=(int n)
+Fecha &Fecha::operator+=(int n)
 {
-    std::tm *t = getTiempoDescNormalizado(dia_ + n, mes_, anno_);
+    std::tm tAux{0};
+    tAux.tm_mday = dia_ + n;
+    tAux.tm_mon = mes_ - 1;
+    tAux.tm_year = anno_ - 1900;
 
-    dia_ = extraeDia(t);
-    mes_ = extraeMes(t);
-    anno_ = extraeAnno(t);
+    std::mktime(&tAux);
+
+    dia_ = extraeDia(&tAux);
+    mes_ = extraeMes(&tAux);
+    anno_ = extraeAnno(&tAux);
 
     if (!esAnnoValido())
     {
-        throw Invalida("ERROR: Anno fuera de rango valido.");
+        throw Fecha::Invalida("ERROR: Anno fuera de rango valido.");
     }
 
     return *this;
 }
 
-Fecha Fecha::operator-=(int n)
+Fecha &Fecha::operator-=(int n) noexcept
 {
     return *this += -n;
 }
 
-Fecha Fecha::operator++()
+Fecha &Fecha::operator++() noexcept
 {
     return *this += 1;
 }
 
-Fecha Fecha::operator--()
+Fecha &Fecha::operator--() noexcept
 {
     return *this += -1;
 }
 
-Fecha Fecha::operator++(int)
+Fecha Fecha::operator++(int) noexcept
 {
-    Fecha f = *this;
+    const Fecha f(*this);
     *this += 1;
     return f;
 }
 
-Fecha Fecha::operator--(int)
+Fecha Fecha::operator--(int) noexcept
 {
-    Fecha f = *this;
+    const Fecha f(*this);
     *this += -1;
     return f;
 }
 
-Fecha Fecha::operator+(int n)
+Fecha Fecha::operator+(int n) const noexcept
 {
     Fecha aux(*this);
     aux += n;
     return aux;
 }
 
-Fecha Fecha::operator-(int n)
+Fecha Fecha::operator-(int n) const noexcept
 {
     Fecha aux(*this);
     aux += -n;
     return aux;
 }
 
-bool operator==(const Fecha &A, const Fecha &B)
+bool operator==(const Fecha &A, const Fecha &B) noexcept
 {
     return A.dia() == B.dia() &&
            A.mes() == B.mes() &&
            A.anno() == B.anno();
 }
 
-bool operator!=(const Fecha &A, const Fecha &B)
+bool operator!=(const Fecha &A, const Fecha &B) noexcept
 {
     return !(A == B);
 }
 
-bool operator<(const Fecha &A, const Fecha &B)
+bool operator<(const Fecha &A, const Fecha &B) noexcept
 {
     if (A.anno() > B.anno())
     {
@@ -173,56 +183,45 @@ bool operator<(const Fecha &A, const Fecha &B)
     }
 }
 
-bool operator>(const Fecha &A, const Fecha &B)
+bool operator>(const Fecha &A, const Fecha &B) noexcept
 {
     return B < A;
 }
 
-bool operator<=(const Fecha &A, const Fecha &B)
+bool operator<=(const Fecha &A, const Fecha &B) noexcept
 {
     return !(B < A);
 }
 
-bool operator>=(const Fecha &A, const Fecha &B)
+bool operator>=(const Fecha &A, const Fecha &B) noexcept
 {
     return !(A < B);
 }
 
 /**********************************METODOS PRIVADOS**************************************/
 
-std::tm *Fecha::getTiempoDesc() const
+std::tm *Fecha::getTiempoDesc() const noexcept
 {
     std::time_t tiempo_calendario = std::time(nullptr);
     return std::localtime(&tiempo_calendario);
 }
 
-std::tm *Fecha::getTiempoDescNormalizado(const int d, const int m, const int a) const
-{
-    std::tm *tAux = getTiempoDesc();
-    tAux->tm_mday = d;
-    tAux->tm_mon = m - 1;
-    tAux->tm_year = a - 1900;
-
-    std::time_t tiempo_cal = std::mktime(tAux);
-    return std::localtime(&tiempo_cal);
-}
-
-int Fecha::extraeDia(const std::tm *t) const
+const int Fecha::extraeDia(const std::tm *t) const noexcept
 {
     return t->tm_mday;
 }
 
-int Fecha::extraeMes(const std::tm *t) const
+const int Fecha::extraeMes(const std::tm *t) const noexcept
 {
     return t->tm_mon + 1;
 }
 
-int Fecha::extraeAnno(const std::tm *t) const
+const int Fecha::extraeAnno(const std::tm *t) const noexcept
 {
     return t->tm_year + 1900;
 }
 
-const int Fecha::getDiasEnMes(int mes)
+const int Fecha::getDiasEnMes(int mes) noexcept
 {
     if (mes <= Fecha::JULIO)
     {
@@ -241,26 +240,26 @@ const int Fecha::getDiasEnMes(int mes)
     }
 }
 
-const bool Fecha::esFechaValida()
+const bool Fecha::esFechaValida() noexcept
 {
     return esDiaValido() && esMesValido() && esAnnoValido();
 }
 
-const bool Fecha::esAnnoValido()
+const bool Fecha::esAnnoValido() noexcept
 {
     return anno_ >= AnnoMinimo && anno_ <= AnnoMaximo;
 }
 
-const bool Fecha::esMesValido()
+const bool Fecha::esMesValido() noexcept
 {
     return mes_ >= Fecha::ENERO && mes_ <= Fecha::DICIEMBRE;
 }
 
-const bool Fecha::esDiaValido()
+const bool Fecha::esDiaValido() noexcept
 {
     return dia_ >= 1 && dia_ <= getDiasEnMes(mes_);
 }
-bool Fecha::esAnnoBisiesto(int a)
+bool Fecha::esAnnoBisiesto(int a) noexcept
 {
     return a % 4 == 0 && (a % 400 == 0 || a % 100 != 0);
 }

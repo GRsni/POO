@@ -13,8 +13,8 @@ public:
     class Invalida
     {
     public:
-        Invalida(const char mot[]);
-        std::string por_que() { return motivo; };
+        Invalida(const char *mot) : motivo(mot) {}
+        const char *por_que() const { return motivo; }
 
     private:
         const char *motivo;
@@ -22,23 +22,21 @@ public:
 
     explicit Fecha(int d = 0, int m = 0, int a = 0);
     Fecha(const char in[]);
-    operator const char *() const;
+    operator const char *() const noexcept;
 
-    Fecha operator++();
-    Fecha operator--();
-    Fecha operator++(int);
-    Fecha operator--(int);
-    Fecha operator+(int n);
-    Fecha operator-(int n);
-    Fecha operator+=(int n);
-    Fecha operator-=(int n);
+    Fecha &operator+=(int n);
+    Fecha &operator-=(int n) noexcept;
+    Fecha &operator++() noexcept;
+    Fecha &operator--() noexcept;
+    Fecha operator++(int) noexcept;
+    Fecha operator--(int) noexcept;
+    Fecha operator+(int n) const noexcept;
+    Fecha operator-(int n) const noexcept;
 
-    int dia() const { return dia_; };
-    int mes() const { return mes_; };
-    int anno() const { return anno_; };
-    void imprimeFecha() const;
-
-    ~Fecha() = default;
+    int dia() const noexcept { return dia_; };
+    int mes() const noexcept { return mes_; };
+    int anno() const noexcept { return anno_; };
+    void imprimeFecha() const noexcept;
 
 private:
     enum MES
@@ -58,30 +56,26 @@ private:
     };
 
     int dia_, mes_, anno_;
-    mutable char salida[35];
 
-    std::tm *getTiempoDesc() const;
-    std::tm *getTiempoDescNormalizado(const int d, const int m, const int a) const;
-    int extraeDia(const std::tm *t) const;
-    int extraeMes(const std::tm *t) const;
-    int extraeAnno(const std::tm *t) const;
+    std::tm *getTiempoDesc() const noexcept;
+    const int extraeDia(const std::tm *t) const noexcept;
+    const int extraeMes(const std::tm *t) const noexcept;
+    const int extraeAnno(const std::tm *t) const noexcept;
 
-    const bool esFechaValida();
-    const bool esDiaValido();
-    const bool esMesValido();
-    const bool esAnnoValido();
+    const bool esFechaValida() noexcept;
+    const bool esDiaValido() noexcept;
+    const bool esMesValido() noexcept;
+    const bool esAnnoValido() noexcept;
 
-    char *getNombreDeDia(int dia);
-
-    const int getDiasEnMes(int mes);
-    bool esAnnoBisiesto(int anno);
+    const int getDiasEnMes(int mes) noexcept;
+    bool esAnnoBisiesto(int anno) noexcept;
 };
 
-bool operator==(const Fecha &A, const Fecha &B);
-bool operator!=(const Fecha &A, const Fecha &B);
-bool operator<(const Fecha &A, const Fecha &B);
-bool operator>(const Fecha &A, const Fecha &B);
-bool operator<=(const Fecha &A, const Fecha &B);
-bool operator>=(const Fecha &A, const Fecha &B);
+bool operator==(const Fecha &A, const Fecha &B) noexcept;
+bool operator!=(const Fecha &A, const Fecha &B) noexcept;
+bool operator<(const Fecha &A, const Fecha &B) noexcept;
+bool operator>(const Fecha &A, const Fecha &B) noexcept;
+bool operator<=(const Fecha &A, const Fecha &B) noexcept;
+bool operator>=(const Fecha &A, const Fecha &B) noexcept;
 
 #endif //FECHA_H
