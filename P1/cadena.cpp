@@ -33,6 +33,12 @@ Cadena::Cadena(const Cadena &C) noexcept : tam_(C.tam_)
     std::strcpy(s_, C.s_);
 }
 
+Cadena::Cadena(Cadena &&C) noexcept : tam_(C.tam_), s_(C.s_)
+{
+    C.tam_ = 0;
+    C.s_ = nullptr;
+}
+
 Cadena &Cadena::operator=(const Cadena &C) noexcept
 {
     if (this != &C)
@@ -45,6 +51,44 @@ Cadena &Cadena::operator=(const Cadena &C) noexcept
     return *this;
 }
 
+Cadena &Cadena::operator=(Cadena &&C) noexcept
+{
+    if (this != &C)
+    {
+        delete[] s_;
+        tam_ = C.tam_;
+        s_ = C.s_;
+        C.tam_ = 0;
+        C.s_ = nullptr;
+    }
+    return *this;
+}
+
+Cadena &Cadena::operator+=(const Cadena &B) noexcept
+{
+    char *copia = new char[tam_ + 1];
+    std::strcpy(copia, s_);
+    delete[] s_;
+    tam_ += B.length();
+    s_ = new char[tam_ + 1];
+    sprintf(s_, "%s%s", copia, B.s_);
+    delete[] copia;
+    return *this;
+}
+
+std::ostream &operator<<(std::ostream &out, const Cadena &C) noexcept
+{
+    out << C.c_str();
+    return out;
+}
+
+std::istream &operator>>(std::istream &in, Cadena &C) noexcept
+{
+    static char cad[32]{0};
+    in >> cad;
+    C = cad;
+    return in;
+}
 const char Cadena::at(size_t n) const
 {
     if (n >= tam_)
@@ -83,18 +127,6 @@ Cadena Cadena::substr(size_t index, size_t tam) const
     }
 }
 
-Cadena &Cadena::operator+=(const Cadena &B) noexcept
-{
-    char *copia = new char[tam_ + 1];
-    std::strcpy(copia, s_);
-    delete[] s_;
-    tam_ += B.length();
-    s_ = new char[tam_ + 1];
-    sprintf(s_, "%s%s", copia, B.s_);
-    delete[] copia;
-    return *this;
-}
-
 Cadena operator+(const Cadena &A, const Cadena &B) noexcept
 {
     Cadena aux = A;
@@ -104,32 +136,32 @@ Cadena operator+(const Cadena &A, const Cadena &B) noexcept
 
 bool operator==(const Cadena &A, const Cadena &B) noexcept
 {
-    return std::strcmp(A, B) == 0;
+    return std::strcmp(A.c_str(), B.c_str()) == 0;
 }
 
 bool operator!=(const Cadena &A, const Cadena &B) noexcept
 {
-    return std::strcmp(A, B) != 0;
+    return std::strcmp(A.c_str(), B.c_str()) != 0;
 }
 
 bool operator>(const Cadena &A, const Cadena &B) noexcept
 {
-    return std::strcmp(A, B) > 0;
+    return std::strcmp(A.c_str(), B.c_str()) > 0;
 }
 
 bool operator<(const Cadena &A, const Cadena &B) noexcept
 {
-    return std::strcmp(A, B) < 0;
+    return std::strcmp(A.c_str(), B.c_str()) < 0;
 }
 
 bool operator<=(const Cadena &A, const Cadena &B) noexcept
 {
-    return !(std::strcmp(A, B) > 0);
+    return !(std::strcmp(A.c_str(), B.c_str()) > 0);
 }
 
 bool operator>=(const Cadena &A, const Cadena &B) noexcept
 {
-    return !(std::strcmp(A, B) < 0);
+    return !(std::strcmp(A.c_str(), B.c_str()) < 0);
 }
 
 Cadena::~Cadena()

@@ -22,7 +22,7 @@ public:
 
     explicit Fecha(int d = 0, int m = 0, int a = 0);
     Fecha(const char in[]);
-    operator const char *() const noexcept;
+    const char *cadena() const noexcept;
 
     Fecha &operator+=(int n);
     Fecha &operator-=(int n);
@@ -33,10 +33,12 @@ public:
     Fecha operator+(int n) const;
     Fecha operator-(int n) const;
 
+    friend std::ostream &operator<<(std::ostream &out, const Fecha &F) noexcept;
+    friend std::istream &operator>>(std::istream &in, Fecha &F);
+
     int dia() const noexcept { return dia_; };
     int mes() const noexcept { return mes_; };
     int anno() const noexcept { return anno_; };
-    void imprimeFecha() const noexcept;
 
 private:
     enum MES

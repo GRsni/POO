@@ -43,7 +43,7 @@ Fecha::Fecha(int d, int m, int a) : dia_(d), mes_(m), anno_(a)
     }
 }
 
-Fecha::operator const char *() const noexcept
+const char *Fecha::cadena() const noexcept
 {
     std::locale::global(std::locale("es_ES.UTF-8"));
 
@@ -181,6 +181,28 @@ bool operator<(const Fecha &A, const Fecha &B) noexcept
             }
         }
     }
+}
+
+std::ostream &operator<<(std::ostream &out, const Fecha &F) noexcept
+{
+    out << F.cadena();
+    return out;
+}
+
+std::istream &operator>>(std::istream &in, Fecha &F)
+{
+    static char cad[11]{0};
+    in >> cad;
+    try
+    {
+        F = Fecha(cad);
+    }
+    catch (const Fecha::Invalida &e)
+    {
+        in.setstate(std::ios::failbit);
+        throw e;
+    }
+    return in;
 }
 
 bool operator>(const Fecha &A, const Fecha &B) noexcept
