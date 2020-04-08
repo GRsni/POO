@@ -7,18 +7,18 @@ VPATH=../Tests-auto:.
 
 all: test-P1-auto test-P1-consola
 
-test-P1-auto: test-caso1-fecha-auto.o test-caso0-cadena-auto.o \
+test-P1-auto: test-caso0-fecha-auto.o test-caso0-cadena-auto.o \
 	test-auto.o cadena.o fecha.o
 	$(CXX) -o $@ $(LDFLAGS) $^
 
-test-caso1-fecha-auto.o test-caso1-cadena-auto.o test-auto.o:\
-	test-caso1-fecha-auto.cpp test-caso1-cadena-auto.cpp \
+test-caso0-fecha-auto.o test-caso0-cadena-auto.o test-auto.o: \
+	test-caso0-fecha-auto.cpp test-caso0-cadena-auto.cpp \
 	test-auto.cpp test-auto.hpp fecha.hpp cadena.hpp	
 
 test-P1-consola: test-P1-consola.o fecha.o cadena.o
 	$(CXX) -o $@ $(LDFLAGS) $^
 
-test_P1-consola.o: fecha.hpp cadena.hpp
+test-P1-consola.o: fecha.hpp cadena.hpp
 
 fecha.o: fecha.cpp fecha.hpp
 

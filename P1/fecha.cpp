@@ -192,6 +192,7 @@ std::ostream &operator<<(std::ostream &out, const Fecha &F) noexcept
 std::istream &operator>>(std::istream &in, Fecha &F)
 {
     static char cad[11]{0};
+    in.width(11);
     in >> cad;
     try
     {
@@ -281,6 +282,7 @@ const bool Fecha::esDiaValido() noexcept
 {
     return dia_ >= 1 && dia_ <= getDiasEnMes(mes_);
 }
+
 bool Fecha::esAnnoBisiesto(int a) noexcept
 {
     return a % 4 == 0 && (a % 400 == 0 || a % 100 != 0);

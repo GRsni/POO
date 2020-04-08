@@ -2,6 +2,7 @@
 #include <cstring>
 #include <cstddef>
 #include <stdexcept>
+#include <stdio.h>
 
 #include "cadena.hpp"
 
@@ -33,8 +34,9 @@ Cadena::Cadena(const Cadena &C) noexcept : tam_(C.tam_)
     std::strcpy(s_, C.s_);
 }
 
-Cadena::Cadena(Cadena &&C) noexcept : tam_(C.tam_), s_(C.s_)
+Cadena::Cadena(Cadena &&C) noexcept : tam_(C.tam_)
 {
+    s_ = C.s_;
     C.tam_ = 0;
     C.s_ = nullptr;
 }
@@ -76,19 +78,6 @@ Cadena &Cadena::operator+=(const Cadena &B) noexcept
     return *this;
 }
 
-std::ostream &operator<<(std::ostream &out, const Cadena &C) noexcept
-{
-    out << C.c_str();
-    return out;
-}
-
-std::istream &operator>>(std::istream &in, Cadena &C) noexcept
-{
-    static char cad[32]{0};
-    in >> cad;
-    C = cad;
-    return in;
-}
 const char Cadena::at(size_t n) const
 {
     if (n >= tam_)
@@ -125,6 +114,11 @@ Cadena Cadena::substr(size_t index, size_t tam) const
         strncpy(subcad, s_ + index, tam);
         return Cadena(subcad);
     }
+}
+
+Cadena::~Cadena()
+{
+    delete[] s_;
 }
 
 Cadena operator+(const Cadena &A, const Cadena &B) noexcept
@@ -164,7 +158,17 @@ bool operator>=(const Cadena &A, const Cadena &B) noexcept
     return !(std::strcmp(A.c_str(), B.c_str()) < 0);
 }
 
-Cadena::~Cadena()
+std::ostream &operator<<(std::ostream &out, const Cadena &C) noexcept
 {
-    delete[] s_;
+    out << C.c_str();
+    return out;
+}
+
+std::istream &operator>>(std::istream &in, Cadena &C) noexcept
+{
+    static char cad[33]{0};
+    in.width(33);
+    in >> cad;
+    C = cad;
+    return in;
 }

@@ -33,9 +33,6 @@ public:
     Fecha operator+(int n) const;
     Fecha operator-(int n) const;
 
-    friend std::ostream &operator<<(std::ostream &out, const Fecha &F) noexcept;
-    friend std::istream &operator>>(std::istream &in, Fecha &F);
-
     int dia() const noexcept { return dia_; };
     int mes() const noexcept { return mes_; };
     int anno() const noexcept { return anno_; };
@@ -79,5 +76,8 @@ bool operator<(const Fecha &A, const Fecha &B) noexcept;
 bool operator>(const Fecha &A, const Fecha &B) noexcept;
 bool operator<=(const Fecha &A, const Fecha &B) noexcept;
 bool operator>=(const Fecha &A, const Fecha &B) noexcept;
+
+std::ostream &operator<<(std::ostream &out, const Fecha &F) noexcept;
+std::istream &operator>>(std::istream &in, Fecha &F);
 
 #endif //FECHA_H
