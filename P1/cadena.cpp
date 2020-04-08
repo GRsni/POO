@@ -166,7 +166,7 @@ std::ostream &operator<<(std::ostream &out, const Cadena &C) noexcept
 
 std::istream &operator>>(std::istream &in, Cadena &C) noexcept
 {
-    static char cad[33]{0};
+    char cad[33]{0};
     in.width(33);
     in >> cad;
     C = cad;

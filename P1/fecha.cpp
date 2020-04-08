@@ -191,7 +191,7 @@ std::ostream &operator<<(std::ostream &out, const Fecha &F) noexcept
 
 std::istream &operator>>(std::istream &in, Fecha &F)
 {
-    static char cad[11]{0};
+    char cad[11]{0};
     in.width(11);
     in >> cad;
     try

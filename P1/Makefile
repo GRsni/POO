@@ -33,4 +33,4 @@ cadena_check:
 	${MAKE} -f Make_check.mk $@
 
 clean:
-	$(RM) t *.o *.gch core *~ test-P1-consola test-P1-auto cadena_check fecha_check
+	$(RM) *.o *.gch core *~ test-P1-consola test-P1-auto cadena_check fecha_check
