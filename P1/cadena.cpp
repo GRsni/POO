@@ -34,9 +34,8 @@ Cadena::Cadena(const Cadena &C) noexcept : tam_(C.tam_)
     std::strcpy(s_, C.s_);
 }
 
-Cadena::Cadena(Cadena &&C) noexcept : tam_(C.tam_)
+Cadena::Cadena(Cadena &&C) noexcept : s_(C.s_), tam_(C.tam_)
 {
-    s_ = C.s_;
     C.tam_ = 0;
     C.s_ = nullptr;
 }

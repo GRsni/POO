@@ -17,7 +17,7 @@ public:
     Cadena &operator=(Cadena &&C) noexcept;
 
     const char *c_str() const noexcept { return s_; };
-    char *c_str() { return s_; };
+    char *c_str() noexcept { return s_; };
     size_t length() const noexcept { return tam_; };
 
     Cadena &operator+=(const Cadena &B) noexcept;
@@ -32,20 +32,20 @@ public:
     const iterator begin() const noexcept { return &s_[0]; }
     const iterator end() const noexcept { return &s_[tam_]; }
 
-    const_iterator cbegin() noexcept { return &s_[0]; }
-    const_iterator cend() noexcept { return &s_[tam_]; }
-    const const_iterator cbegin() const noexcept { return &s_[0]; }
-    const const_iterator cend() const noexcept { return &s_[tam_]; }
+    const_iterator cbegin() noexcept { return const_iterator(begin()); }
+    const_iterator cend() noexcept { return const_iterator(end()); }
+    const const_iterator cbegin() const noexcept { return const_iterator(begin()); }
+    const const_iterator cend() const noexcept { return const_iterator(end()); }
 
-    reverse_iterator rbegin() noexcept;
-    reverse_iterator rend() noexcept;
-    const reverse_iterator rbegin() const noexcept;
-    const reverse_iterator rend() const noexcept;
+    reverse_iterator rbegin() noexcept { return reverse_iterator(end()); };
+    reverse_iterator rend() noexcept { return reverse_iterator(begin()); };
+    const reverse_iterator rbegin() const noexcept { return reverse_iterator(end()); };
+    const reverse_iterator rend() const noexcept { return reverse_iterator(begin()); };
 
-    const_reverse_iterator crbegin() noexcept;
-    const_reverse_iterator crend() noexcept;
-    const const_reverse_iterator crbegin() const noexcept;
-    const const_reverse_iterator crend() const noexcept;
+    const_reverse_iterator crbegin() noexcept { return const_reverse_iterator(cend()); };
+    const_reverse_iterator crend() noexcept { return const_reverse_iterator(cbegin()); };
+    const const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(cend()); };
+    const const_reverse_iterator crend() const noexcept { return const_reverse_iterator(cbegin()); };
 
     const char operator[](size_t n) const noexcept { return s_[n]; }
     char &operator[](size_t n) noexcept { return s_[n]; }
@@ -71,45 +71,5 @@ bool operator>=(const Cadena &A, const Cadena &B) noexcept;
 
 std::ostream &operator<<(std::ostream &out, const Cadena &C) noexcept;
 std::istream &operator>>(std::istream &in, Cadena &C) noexcept;
-
-inline Cadena::reverse_iterator Cadena::rbegin() noexcept
-{
-    return reverse_iterator(end());
-}
-
-inline Cadena::reverse_iterator Cadena::rend() noexcept
-{
-    return reverse_iterator(begin());
-}
-
-inline const Cadena::reverse_iterator Cadena::rbegin() const noexcept
-{
-    return reverse_iterator(end());
-}
-
-inline const Cadena::reverse_iterator Cadena::rend() const noexcept
-{
-    return reverse_iterator(begin());
-}
-
-inline Cadena::const_reverse_iterator Cadena::crbegin() noexcept
-{
-    return const_reverse_iterator(cend());
-}
-
-inline Cadena::const_reverse_iterator Cadena::crend() noexcept
-{
-    return const_reverse_iterator(cbegin());
-}
-
-inline const Cadena::const_reverse_iterator Cadena::crbegin() const noexcept
-{
-    return const_reverse_iterator(cend());
-}
-
-inline const Cadena::const_reverse_iterator Cadena::crend() const noexcept
-{
-    return const_reverse_iterator(cbegin());
-}
 
 #endif //CADENA__HPP
