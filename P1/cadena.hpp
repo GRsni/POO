@@ -29,23 +29,18 @@ public:
 
     iterator begin() noexcept { return &s_[0]; }
     iterator end() noexcept { return &s_[tam_]; }
-    const iterator begin() const noexcept { return &s_[0]; }
-    const iterator end() const noexcept { return &s_[tam_]; }
-
-    const_iterator cbegin() noexcept { return const_iterator(begin()); }
-    const_iterator cend() noexcept { return const_iterator(end()); }
-    const const_iterator cbegin() const noexcept { return const_iterator(begin()); }
-    const const_iterator cend() const noexcept { return const_iterator(end()); }
-
     reverse_iterator rbegin() noexcept { return reverse_iterator(end()); };
     reverse_iterator rend() noexcept { return reverse_iterator(begin()); };
-    const reverse_iterator rbegin() const noexcept { return reverse_iterator(end()); };
-    const reverse_iterator rend() const noexcept { return reverse_iterator(begin()); };
 
-    const_reverse_iterator crbegin() noexcept { return const_reverse_iterator(cend()); };
-    const_reverse_iterator crend() noexcept { return const_reverse_iterator(cbegin()); };
-    const const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(cend()); };
-    const const_reverse_iterator crend() const noexcept { return const_reverse_iterator(cbegin()); };
+    const_iterator begin() const noexcept { return &s_[0]; }
+    const_iterator end() const noexcept { return &s_[tam_]; }
+    const_iterator cbegin() const noexcept { return const_iterator(begin()); }
+    const_iterator cend() const noexcept { return const_iterator(end()); }
+
+    const_reverse_iterator rbegin() const noexcept { return const_reverse_iterator(end()); };
+    const_reverse_iterator rend() const noexcept { return const_reverse_iterator(begin()); };
+    const_reverse_iterator crbegin() const noexcept { return const_reverse_iterator(cend()); };
+    const_reverse_iterator crend() const noexcept { return const_reverse_iterator(cbegin()); };
 
     const char operator[](size_t n) const noexcept { return s_[n]; }
     char &operator[](size_t n) noexcept { return s_[n]; }
