@@ -109,9 +109,11 @@ Cadena Cadena::substr(size_t index, size_t tam) const
     }
     else
     {
-        static char *subcad = new char[tam + 1]{0};
+        char *subcad = new char[tam + 1]{0};
         strncpy(subcad, s_ + index, tam);
-        return Cadena(subcad);
+        Cadena sub(subcad);
+        delete[] subcad;
+        return sub;
     }
 }
 

@@ -171,3 +171,13 @@ distclean: clean
 
 # Objetivos falsos
 .PHONY: all tests test-consola test-auto check valgrind clean dist distclean
+
+t: t.o articulo.o usuario.o fecha.o cadena.o tarjeta.o
+	$(CXX) $(CXXFLAGS) -lcrypt -o t $^
+
+t.o: t.cpp articulo.cpp articulo.hpp ../P1/fecha.cpp ../P1/fecha.hpp ../P1/cadena.cpp ../P1/cadena.hpp \
+		usuario.cpp usuario.hpp tarjeta.cpp tarjeta.hpp
+	$(CXX) $(CXXFLAGS) -c $^
+
+clt:
+	rm -r *.gch *.o t 

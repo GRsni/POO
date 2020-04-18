@@ -29,7 +29,7 @@ std::ostream &operator<<(std::ostream &out, Articulo &A)
 {
     out << std::setprecision(2)
         << "[" << A.referencia() << "] \"" << A.titulo() << "\", " << A.f_publi().anno() << ". "
-        << std::fixed << A.precio() << " \u20AC."
+        << std::fixed << A.precio() << " \u20AC"
         << std::defaultfloat;
     return out;
 }
