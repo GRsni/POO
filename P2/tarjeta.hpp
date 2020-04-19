@@ -6,6 +6,10 @@
 #include "../P1/fecha.hpp"
 #include "../P1/cadena.hpp"
 
+class Usuario;
+
+bool luhn(const Cadena &numero);
+
 class Numero
 {
 public:
@@ -26,13 +30,15 @@ public:
         const Numero::Razon razon_;
     };
 
-    Numero(const Cadena c);
+    Numero(const Cadena &c);
     operator const char *() const { return numero_.c_str(); };
 
     bool operator<(const Numero &N);
 
 private:
-    const Cadena numero_;
+    Cadena numero_;
+
+    double num() const;
 };
 
 class Tarjeta
