@@ -2,6 +2,7 @@
 #define TARJETA_H
 
 #include <iostream>
+#include <set>
 #include "usuario.hpp"
 #include "../P1/fecha.hpp"
 #include "../P1/cadena.hpp"
@@ -33,13 +34,11 @@ public:
     Numero(const Cadena &c);
     operator const char *() const { return numero_.c_str(); };
 
-    bool operator<(const Numero &N);
-
 private:
     Cadena numero_;
-
-    double num() const;
 };
+
+bool operator<(const Numero &a, const Numero &b);
 
 class Tarjeta
 {
@@ -77,28 +76,39 @@ public:
         const Fecha fecha;
     };
 
-    class Desactivada;
+    class Desactivada
+    {
+    };
 
-    Tarjeta(Numero num, Usuario us, Fecha fecha, bool activa = true);
+    Tarjeta(Numero num, Usuario &us, Fecha fecha);
     Tarjeta(const Tarjeta &T) = delete;
     Tarjeta &operator=(const Tarjeta &T) = delete;
 
     const Numero numero() const { return numero_; }
-    const Usuario *titular() const { return usuario_; }
+    const Usuario *titular() const { return titular_; }
     const Fecha caducidad() const { return caducidad_; }
-    const bool activa() const { return activa_; }
-    const bool activa(bool act = true);
+    bool activa() const { return activa_; }
+    bool activa(bool act = true);
     const Tipo tipo() const;
 
     void anula_titular();
 
+    Cadena imprimeLinea(int tam, bool arriba) const;
+
+    ~Tarjeta();
+
 private:
     const Numero numero_;
-    const Usuario *usuario_;
+    const Usuario *titular_;
     const Fecha caducidad_;
     bool activa_ = true;
+
+    static std::set<Numero> coleccion;
 };
 
+bool operator<(const Tarjeta &a, const Tarjeta &b);
+
+std::ostream &operator<<(std::ostream &out, const Tarjeta::Tipo &t);
 std::ostream &operator<<(std::ostream &out, const Tarjeta &T);
 
 #endif //TARJETA_H

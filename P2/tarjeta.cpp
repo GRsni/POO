@@ -1,16 +1,20 @@
 #include "tarjeta.hpp"
 
+#include <ctype.h>
+#include <iomanip>
+#include <cstring>
+#include <iomanip>
+
 Numero::Numero(const Cadena &C)
 {
-    size_t tam = C.length();
     Cadena normalizada;
-    for (unsigned int i = 0; i < tam; i++)
+    for (int i = 0; i < C.length(); i++)
     {
-        if (C[i] >= '0' && C[i] <= '9')
+        if (isdigit(C[i]))
         {
             normalizada += Cadena(1, C[i]);
         }
-        else if (C[i] != ' ')
+        else if (!isspace(C[i]))
         {
             throw Numero::Incorrecto(Numero::DIGITOS);
         }
@@ -27,18 +31,108 @@ Numero::Numero(const Cadena &C)
     numero_ = normalizada;
 }
 
-bool Numero::operator<(const Numero &N)
+bool operator<(const Numero &a, const Numero &b)
 {
-    return num() < N.num();
+    return strcmp(a, b) < 0;
 }
 
-double Numero::num() const
+std::set<Numero> Tarjeta::coleccion;
+
+Tarjeta::Tarjeta(Numero num, Usuario &us, Fecha f) : numero_(num),
+                                                     titular_(&us),
+                                                     caducidad_(f),
+                                                     activa_(true)
 {
-    double num = 0;
-    for (int i = numero_.length() - 1; i >= 0; i--)
+    if (caducidad_ < Fecha())
     {
-        num *= 10;
-        num += (double)(numero_[i] - '0');
+        throw Tarjeta::Caducada(caducidad_);
     }
-    return num;
+    if (!Tarjeta::coleccion.insert(numero_).second)
+    {
+        throw Tarjeta::Num_duplicado(numero_);
+    }
+
+    const_cast<Usuario *>(titular_)->es_titular_de(*this);
+}
+
+bool Tarjeta::activa(bool act)
+{
+    activa_ = act;
+    return act;
+}
+
+const Tarjeta::Tipo Tarjeta::tipo() const
+{
+    if (numero_[0] == '3')
+    {
+        if (numero_[1] == '4' || numero_[1] == '7')
+        {
+            return Tarjeta::Tipo::AmericanExpress;
+        }
+        else
+        {
+            return Tarjeta::Tipo::JCB;
+        }
+    }
+    else if (numero_[0] == '4')
+    {
+        return Tarjeta::Tipo::VISA;
+    }
+    else if (numero_[0] == '5')
+    {
+        return Tarjeta::Tipo::MasterCard;
+    }
+    else if (numero_[0] == '6')
+    {
+        return Tarjeta::Tipo::Maestro;
+    }
+    else
+    {
+        return Tarjeta::Tipo::Otro;
+    }
+}
+
+void Tarjeta::anula_titular()
+{
+    titular_ = nullptr;
+    activa_ = false;
+}
+
+Tarjeta::~Tarjeta()
+{
+    if (titular_ != nullptr)
+    {
+        const_cast<Usuario *>(titular_)->no_es_titular_de(*this);
+    }
+}
+
+bool operator<(const Tarjeta &a, const Tarjeta &b)
+{
+    return a.numero() < b.numero();
+}
+
+std::ostream &operator<<(std::ostream &out, const Tarjeta::Tipo &t)
+{
+    const Cadena tipos[] = {"American Express", "JCB", "VISA", "Mastercard", "Maestro", "Otro"};
+    out << tipos[t];
+    return out;
+}
+
+std::ostream &operator<<(std::ostream &out, const Tarjeta &t)
+{
+    int tam = t.titular()->nombre().length() + t.titular()->apellidos().length() + 2;
+    Cadena titular_facial(t.titular()->nombre() + " " + t.titular()->apellidos());
+    out << "+" << Cadena(tam + 1, '-') << "+" << std::endl
+        << "| " << std::setw(tam) << std::left << t.tipo() << "|" << std::endl
+        << "| " << std::setw(tam) << std::left << t.numero() << "|" << std::endl
+        << "| ";
+    for (auto it = titular_facial.begin(); it != titular_facial.end(); ++it)
+    {
+        out << (char)toupper(*it);
+    }
+    out << " |" << std::endl
+        << "| Caduca: " << std::setw(2) << std::right << t.caducidad().mes() << "/"
+        << (t.caducidad().anno() % 100) << "            |" << std::endl
+        << "+" << Cadena(tam + 1, '-') << "+" << std::endl;
+    return out;
 }

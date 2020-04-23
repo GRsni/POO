@@ -6,6 +6,7 @@
 #include <cstddef>
 #include <map>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "../P1/cadena.hpp"
 #include "articulo.hpp"
@@ -67,12 +68,7 @@ public:
         const Cadena idd_;
     };
 
-    Usuario(Cadena id, Cadena nom, Cadena apel, Cadena dir, Clave clave) : identificador_(id),
-                                                                           nombre_(nom),
-                                                                           apellidos_(apel),
-                                                                           direccion_(dir),
-                                                                           contraseña_(clave) {}
-
+    Usuario(Cadena id, Cadena nom, Cadena apel, Cadena dir, Clave clave);
     Usuario(const Usuario &U) = delete;
     Usuario &operator=(const Usuario &U) = delete;
 
@@ -80,17 +76,31 @@ public:
     const Cadena nombre() const { return nombre_; }
     const Cadena apellidos() const { return apellidos_; }
     const Cadena direccion() const { return direccion_; }
-    //Tarjetas tarjetas() { return tarjetas; }
-    const Articulos compra() const { return articulos; }
+    const Tarjetas tarjetas() const { return tarjetas_; }
+    const Articulos compra() const { return articulos_; }
+    void compra(Articulo &a, int cantidad = 1);
+
+    void es_titular_de(Tarjeta &T);
+    void no_es_titular_de(Tarjeta &T);
+
+    size_t n_articulos() const { return articulos_.size(); }
+
+    friend std::ostream &operator<<(std::ostream &out, const Usuario &u);
+
+    friend std::ostream &mostrar_carro(std::ostream &out, const Usuario &u);
+
+    ~Usuario();
 
 private:
     const Cadena identificador_,
         nombre_,
         apellidos_,
         direccion_;
-    Clave contraseña_;
-    Tarjetas tarjetas;
-    Articulos articulos;
+    const Clave contrasenna_;
+    Tarjetas tarjetas_;
+    Articulos articulos_;
+
+    static std::unordered_set<Cadena> identificadores;
 };
 
 #endif //USUARIO_H

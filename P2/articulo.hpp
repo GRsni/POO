@@ -8,12 +8,12 @@
 class Articulo
 {
 public:
-    Articulo(const double ref, const Cadena &c, const Fecha &f, double precio, double stock = 0);
+    Articulo(const Cadena &ref, const Cadena &c, const Fecha &f, double precio, double stock = 0);
     Articulo(const Articulo &A);
 
     Articulo &operator=(const Articulo &A);
 
-    const double referencia() const;
+    const Cadena &referencia() const;
     const Cadena &titulo() const;
     const Fecha &f_publi() const;
     const double precio() const;
@@ -24,7 +24,7 @@ public:
     ~Articulo();
 
 private:
-    const double referencia_;
+    const Cadena referencia_;
     const Cadena titulo_;
     const Fecha f_publi_;
     double precio_;

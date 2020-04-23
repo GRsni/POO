@@ -7,4 +7,4 @@ entregables/
 dsl-comprobaciones/
 Tests-auto/
 *.gz
-t.cpp
+**/t.cpp

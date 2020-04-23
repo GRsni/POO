@@ -53,7 +53,7 @@ int main(int argc, const char **argv){
       "Revisa el enunciado respecto a la copia de objetos.");
     c2.guardClauses("tarjeta.hpp", "Recuerda añadir las guardas de inclusión.");
     vector<string> methodNames = {"numero", "caducidad", "activa"};
-    vector<vector<string> > parametersMethods = {{},{},{},{}};
+    vector<vector<string> > parametersMethods = {{},{},{}};
     c2.inlineMethod(methodNames, parametersMethods, "Tarjeta",
 		    {"const", "const", "const", "const"},
 		    "Sugerencia: incluir marca 'inline' a aquellos métodos"
