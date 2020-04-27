@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cstddef>
 #include <iterator>
+#include <string>
+#include <system_error>
 
 class Cadena
 {

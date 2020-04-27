@@ -55,6 +55,7 @@ const char *Fecha::cadena() const noexcept
     std::mktime(&tAux);
     static char salida[36]{0};
     std::strftime(salida, 36, "%A %d de %B de %Y", &tAux);
+    std::locale::global(std::locale("C"));
     return salida;
 }
 

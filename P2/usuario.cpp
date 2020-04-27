@@ -3,12 +3,11 @@
 #include <random>
 #include <cstddef>
 #include <cstring>
-#include <ctime>
 #include <utility>
 
 #include "usuario.hpp"
 
-Clave::Incorrecta::Incorrecta(const Clave::Razon r) : razon_(r) {}
+Clave::Incorrecta::Incorrecta(const Clave::Razon r) noexcept : razon_(r) {}
 
 std::random_device Clave::rd;
 std::uniform_int_distribution<std::size_t> Clave::dist(0, 63);
@@ -29,9 +28,9 @@ Clave::Clave(const char *cad)
     clave_ = Cadena(cifrada);
 }
 
-Clave::Clave(const Clave &C) : clave_(C.clave_) {}
+Clave::Clave(const Clave &C) noexcept : clave_(C.clave_) {}
 
-Clave &Clave::operator=(const Clave &c)
+Clave &Clave::operator=(const Clave &c) noexcept
 {
     if (this != &c)
     {
@@ -40,16 +39,16 @@ Clave &Clave::operator=(const Clave &c)
     return *this;
 }
 
-const bool Clave::verifica(const char *cad) const
+const bool Clave::verifica(const char *cad) const noexcept
 {
     return strcmp(crypt(cad, clave_.c_str()), clave_.c_str()) == 0;
 }
 
 /****************************METODOS PRIVADOS CLAVE***********************************/
 
-const char *Clave::salt() const
+const char *Clave::salt() const noexcept
 {
-    const Cadena simbolos = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
+    const char *simbolos = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
     char *salt = new char[3]{0};
 
     salt[0] = simbolos[Clave::dist(Clave::rd)];
@@ -60,11 +59,15 @@ const char *Clave::salt() const
 
 std::unordered_set<Cadena> Usuario::identificadores;
 
-Usuario::Usuario(Cadena id, Cadena nom, Cadena apel, Cadena dir, Clave clave) : identificador_(id),
-                                                                                nombre_(nom),
-                                                                                apellidos_(apel),
-                                                                                direccion_(dir),
-                                                                                contrasenna_(clave)
+Usuario::Usuario(const Cadena &id,
+                 const Cadena &nom,
+                 const Cadena &apel,
+                 const Cadena &dir,
+                 const Clave &clave) : identificador_(id),
+                                       nombre_(nom),
+                                       apellidos_(apel),
+                                       direccion_(dir),
+                                       contrasenna_(clave)
 {
     if (!Usuario::identificadores.insert(identificador_).second)
     {
@@ -72,7 +75,7 @@ Usuario::Usuario(Cadena id, Cadena nom, Cadena apel, Cadena dir, Clave clave) : 
     }
 }
 
-void Usuario::es_titular_de(Tarjeta &t)
+void Usuario::es_titular_de(Tarjeta &t) noexcept
 {
     if (t.titular() == this)
     {
@@ -80,13 +83,17 @@ void Usuario::es_titular_de(Tarjeta &t)
     }
 }
 
-void Usuario::no_es_titular_de(Tarjeta &t)
+void Usuario::no_es_titular_de(Tarjeta &t) noexcept
 {
-    t.anula_titular();
-    tarjetas_.erase(t.numero());
+    auto it = tarjetas_.find(t.numero());
+    if (it != tarjetas_.end())
+    {
+        t.anula_titular();
+        tarjetas_.erase(t.numero());
+    }
 }
 
-void Usuario::compra(Articulo &a, int cantidad)
+void Usuario::compra(Articulo &a, int cantidad) noexcept
 {
     if (cantidad == 0)
     {
@@ -94,11 +101,11 @@ void Usuario::compra(Articulo &a, int cantidad)
     }
     else
     {
-        articulos_.insert(std::make_pair(&a, cantidad));
+        articulos_[&a] = cantidad;
     }
 }
 
-Usuario::~Usuario()
+Usuario::~Usuario() noexcept
 {
     for (auto it = tarjetas_.begin(); it != tarjetas_.end(); ++it)
     {
@@ -107,7 +114,7 @@ Usuario::~Usuario()
     Usuario::identificadores.erase(identificador_);
 }
 
-std::ostream &operator<<(std::ostream &out, const Usuario &u)
+std::ostream &operator<<(std::ostream &out, const Usuario &u) noexcept
 {
     out << u.id() << " [" << u.contrasenna_.clave() << "] " << u.nombre() << " " << u.apellidos() << std::endl;
     out << u.direccion() << "\nTarjetas:\n";
@@ -118,10 +125,11 @@ std::ostream &operator<<(std::ostream &out, const Usuario &u)
             out << *it->second;
         }
     }
+    out << std::endl;
     return out;
 }
 
-std::ostream &mostrar_carro(std::ostream &out, const Usuario &u)
+std::ostream &mostrar_carro(std::ostream &out, const Usuario &u) noexcept
 {
     out << "Carrito de la compra de " << u.id() << " [Artículos: " << u.n_articulos() << "]" << std::endl;
     out << " Cant.  Articulo" << std::endl;
@@ -133,5 +141,6 @@ std::ostream &mostrar_carro(std::ostream &out, const Usuario &u)
             out << "   " << it->second << "       " << *it->first << std::endl;
         }
     }
+    out << std::endl;
     return out;
 }

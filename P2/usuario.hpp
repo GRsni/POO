@@ -27,25 +27,25 @@ public:
     class Incorrecta
     {
     public:
-        Incorrecta(const Clave::Razon r);
-        const Clave::Razon razon() const { return razon_; };
+        Incorrecta(const Clave::Razon r) noexcept;
+        const Clave::Razon razon() const noexcept { return razon_; };
 
     private:
         const Clave::Razon razon_;
     };
 
     Clave(const char *cad);
-    Clave(const Clave &C);
+    Clave(const Clave &C) noexcept;
 
-    Clave &operator=(const Clave &C);
+    Clave &operator=(const Clave &C) noexcept;
 
-    const Cadena clave() const { return clave_; };
-    const bool verifica(const char *cad) const;
+    const Cadena clave() const noexcept { return clave_; };
+    const bool verifica(const char *cad) const noexcept;
 
 private:
     Cadena clave_;
 
-    const char *salt() const;
+    const char *salt() const noexcept;
 
     static std::random_device rd;
     static std::uniform_int_distribution<std::size_t> dist;
@@ -62,34 +62,34 @@ public:
     public:
         Id_duplicado(const Cadena id) : idd_(id) {}
 
-        const Cadena idd() const { return idd_; }
+        const Cadena idd() const noexcept { return idd_; }
 
     private:
         const Cadena idd_;
     };
 
-    Usuario(Cadena id, Cadena nom, Cadena apel, Cadena dir, Clave clave);
+    Usuario(const Cadena &id, const Cadena &nom, const Cadena &apel, const Cadena &dir, const Clave &clave);
     Usuario(const Usuario &U) = delete;
     Usuario &operator=(const Usuario &U) = delete;
 
-    const Cadena id() const { return identificador_; }
-    const Cadena nombre() const { return nombre_; }
-    const Cadena apellidos() const { return apellidos_; }
-    const Cadena direccion() const { return direccion_; }
-    const Tarjetas tarjetas() const { return tarjetas_; }
-    const Articulos compra() const { return articulos_; }
-    void compra(Articulo &a, int cantidad = 1);
+    const Cadena id() const noexcept { return identificador_; }
+    const Cadena nombre() const noexcept { return nombre_; }
+    const Cadena apellidos() const noexcept { return apellidos_; }
+    const Cadena direccion() const noexcept { return direccion_; }
+    const Tarjetas &tarjetas() const noexcept { return tarjetas_; }
+    const Articulos compra() const noexcept { return articulos_; }
+    void compra(Articulo &a, int cantidad = 1) noexcept;
 
-    void es_titular_de(Tarjeta &T);
-    void no_es_titular_de(Tarjeta &T);
+    void es_titular_de(Tarjeta &T) noexcept;
+    void no_es_titular_de(Tarjeta &T) noexcept;
 
-    size_t n_articulos() const { return articulos_.size(); }
+    size_t n_articulos() const noexcept { return articulos_.size(); }
 
-    friend std::ostream &operator<<(std::ostream &out, const Usuario &u);
+    friend std::ostream &operator<<(std::ostream &out, const Usuario &u) noexcept;
 
-    friend std::ostream &mostrar_carro(std::ostream &out, const Usuario &u);
+    friend std::ostream &mostrar_carro(std::ostream &out, const Usuario &u) noexcept;
 
-    ~Usuario();
+    ~Usuario() noexcept;
 
 private:
     const Cadena identificador_,

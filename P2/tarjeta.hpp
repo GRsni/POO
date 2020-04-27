@@ -46,12 +46,12 @@ class Tarjeta
 public:
     enum Tipo
     {
-        Otro,
-        VISA,
-        MasterCard,
-        Maestro,
+        AmericanExpress,
         JCB,
-        AmericanExpress
+        VISA,
+        Mastercard,
+        Maestro,
+        Otro
     };
 
     class Num_duplicado
@@ -80,7 +80,7 @@ public:
     {
     };
 
-    Tarjeta(Numero num, Usuario &us, Fecha fecha);
+    Tarjeta(const Numero &num, const Usuario &us, const Fecha &fecha);
     Tarjeta(const Tarjeta &T) = delete;
     Tarjeta &operator=(const Tarjeta &T) = delete;
 
