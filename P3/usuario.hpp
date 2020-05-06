@@ -40,7 +40,7 @@ public:
     Clave &operator=(const Clave &C) noexcept;
 
     const Cadena clave() const noexcept { return clave_; };
-    const bool verifica(const char *cad) const noexcept;
+    const bool verifica(const char *cad) const;
 
 private:
     Cadena clave_;

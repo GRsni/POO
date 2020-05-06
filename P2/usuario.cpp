@@ -37,9 +37,14 @@ Clave &Clave::operator=(const Clave &c) noexcept
     return *this;
 }
 
-const bool Clave::verifica(const char *cad) const noexcept
+const bool Clave::verifica(const char *cad) const
 {
-    return strcmp(crypt(cad, clave_.c_str()), clave_.c_str()) == 0;
+    const char *prueba = crypt(cad, clave_.c_str());
+    if (prueba == nullptr)
+    {
+        throw Clave::Incorrecta(Clave::ERROR_CRYPT);
+    }
+    return strcmp(prueba, clave_.c_str()) == 0;
 }
 
 /****************************METODOS PRIVADOS CLAVE***********************************/
@@ -47,7 +52,7 @@ const bool Clave::verifica(const char *cad) const noexcept
 const char *Clave::salt() const noexcept
 {
     const char *simbolos = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
-    char *salt = new char[3]{0};
+    char *salt = new char[2];
 
     static std::random_device rd;
     static std::uniform_int_distribution<size_t> dist(0, 63);
