@@ -4,20 +4,21 @@
 #include <iomanip>
 #include <cstring>
 #include <utility>
+#include <functional>
+#include <algorithm>
 
 Numero::Numero(const Cadena &C)
 {
-    Cadena normalizada;
-    for (int i = 0; i < C.length(); i++)
+    Cadena normalizada(C);
+
+    Cadena::iterator it = std::remove_if(normalizada.begin(), normalizada.end(), EsBlanco());
+    std::cout << *it << std::endl;
+
+    //    it = std::find_if(normalizada.begin(), normalizada.end(), EsDigito()));
+
+    if (it != normalizada.end())
     {
-        if (isdigit(C[i]))
-        {
-            normalizada += Cadena(1, C[i]);
-        }
-        else if (!isspace(C[i]))
-        {
-            throw Numero::Incorrecto(Numero::DIGITOS);
-        }
+        throw Numero::Incorrecto(Numero::DIGITOS);
     }
     if (normalizada.length() < 13 || normalizada.length() > 19)
     {

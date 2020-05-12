@@ -8,13 +8,13 @@
 
 class Usuario_Pedido
 {
+public:
     typedef std::set<Pedido *> Pedidos;
 
-public:
     void asocia(Usuario &u, Pedido &p);
     void asocia(Pedido &p, Usuario &u);
-    const Pedidos &pedidos(const Usuario &u) const;
-    const Usuario &cliente(const Pedido &p) const;
+    Pedidos pedidos(Usuario &u);
+    Usuario *cliente(Pedido &p);
 
 private:
     typedef std::map<Usuario *, Pedidos> UP;

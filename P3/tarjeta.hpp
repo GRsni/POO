@@ -21,6 +21,16 @@ public:
         NO_VALIDO
     };
 
+    struct EsBlanco
+    {
+        bool operator()(char c) const { return c == ' '; };
+    };
+
+    struct EsDigito
+    {
+        bool operator()(char c) const { return isdigit(c); };
+    };
+
     class Incorrecto
     {
     public:
