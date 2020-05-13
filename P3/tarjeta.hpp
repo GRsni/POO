@@ -102,8 +102,6 @@ public:
     bool activa(bool act = true);
     const Tipo tipo() const;
 
-    Cadena imprimeLinea(int tam, bool arriba) const;
-
     ~Tarjeta();
 
 private:

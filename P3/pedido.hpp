@@ -1,6 +1,8 @@
 #ifndef PEDIDO_H
 #define PEDIDO_H
 
+#include <iostream>
+
 #include "../P1/fecha.hpp"
 #include "usuario.hpp"
 #include "usuario-pedido.hpp"
@@ -40,14 +42,23 @@ public:
         const Articulo *articulo_;
     };
 
-    Pedido(Usuario_Pedido &up, Pedido_Articulo &pa, Usuario &u, Tarjeta &t, Fecha f = ());
+    Pedido(Usuario_Pedido &up, Pedido_Articulo &pa, Usuario &u, const Tarjeta &t, const Fecha f = ());
+    double numero() const { return numPed; }
+    const Tarjeta &tarjeta() const { return *tarjeta_; }
+    const Fecha &fecha() const { return *fecha_; }
+    double total() const { return importe; }
+    double n_total_pedidos() const { return pedidosTotales; }
 
 private:
     double numPed;
     const Tarjeta *tarjeta_;
-    Fecha fecha_;
+    const Fecha *fecha_;
     double importe;
     double pedidosTotales;
+
+    static int contador_pedidos = 0;
 };
+
+std::ostream &operator<<(std::ostream &out, const Pedido &p);
 
 #endif //PEDIDO_H

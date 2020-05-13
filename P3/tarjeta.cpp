@@ -9,27 +9,30 @@
 
 Numero::Numero(const Cadena &C)
 {
-    Cadena normalizada(C);
+    numero_ = C;
 
-    Cadena::iterator it = std::remove_if(normalizada.begin(), normalizada.end(), EsBlanco());
-    std::cout << *it << std::endl;
+    Cadena::iterator it = std::remove_if(numero_.begin(), numero_.end(), EsBlanco());
 
-    //    it = std::find_if(normalizada.begin(), normalizada.end(), EsDigito()));
+    if (it != numero_.end())
+    {
+        *it = '\0';
+        Cadena aux = (numero_.c_str());
+        numero_ = aux;
+    }
 
-    if (it != normalizada.end())
+    if (std::find_if(numero_.begin(), numero_.end(), std::not1(EsDigito())) != numero_.end())
     {
         throw Numero::Incorrecto(Numero::DIGITOS);
     }
-    if (normalizada.length() < 13 || normalizada.length() > 19)
+    if (numero_.length() < 13 || numero_.length() > 19)
     {
         throw Numero::Incorrecto(Numero::LONGITUD);
     }
 
-    if (!luhn(normalizada))
+    if (!luhn(numero_))
     {
         throw Numero::Incorrecto(Numero::NO_VALIDO);
     }
-    numero_ = normalizada;
 }
 
 bool operator<(const Numero &a, const Numero &b)
