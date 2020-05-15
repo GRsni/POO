@@ -2,9 +2,13 @@
 #define USUARIO_PEDIDO_H
 
 #include <map>
+#include <set>
 
 #include "usuario.hpp"
 #include "pedido.hpp"
+
+class Pedido;
+class Usuario;
 
 class Usuario_Pedido
 {
@@ -13,8 +17,8 @@ public:
 
     void asocia(Usuario &u, Pedido &p);
     void asocia(Pedido &p, Usuario &u);
-    Pedidos pedidos(Usuario &u);
-    Usuario *cliente(Pedido &p);
+    const Pedidos &pedidos(Usuario &u);
+    const Usuario *cliente(Pedido &p);
 
 private:
     typedef std::map<Usuario *, Pedidos> UP;

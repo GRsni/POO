@@ -2,9 +2,14 @@
 #define PEDIDO_ARTICULO_H
 
 #include <iostream>
+#include <map>
+#include <set>
 
 #include "pedido.hpp"
 #include "articulo.hpp"
+
+class Pedido;
+class Articulo;
 
 class LineaPedido
 {
@@ -26,28 +31,28 @@ class Pedido_Articulo
 {
     class OrdenaArticulos
     {
-        bool operator()(const Articulo &a, const Articulo &b) const
+        bool operator()(const Articulo *a, const Articulo *b) const
         {
-            return a.referencia() < b.referencia();
+            return a->referencia() < b->referencia();
         }
     };
 
     class OrdenaPedidos
     {
-        bool operator()(const Pedido &a, const Pedido &b) const
-        {
-            return a.numero() < b.numero();
-        }
+        bool operator()(const Pedido *a, const Pedido *b) const;
     };
 
 public:
     typedef std::map<Articulo *, LineaPedido, OrdenaArticulos> ItemsPedido;
     typedef std::map<Pedido *, LineaPedido, OrdenaPedidos> Pedidos;
 
-    void pedir(const Pedido &p, const Articulo &a, double precio, unsigned int cantidad = 1) const;
-    void pedir(const Articulo &a, const Pedido &p, double precio, unsigned int cantidad = 1) const;
+    void pedir(const Pedido &p, const Articulo &a, double precio, unsigned int cantidad = 1);
+    void pedir(const Articulo &a, const Pedido &p, double precio, unsigned int cantidad = 1);
     const ItemsPedido &detalle(const Pedido &p) const;
     const Pedidos &ventas(const Articulo &a) const;
+
+    void mostrarDetallePedidos(std::ostream &out);
+    void mostrarVentasArticulos(std::ostream &out);
 
 private:
     std::map<Pedido *, ItemsPedido, OrdenaPedidos> pedido_articulos;

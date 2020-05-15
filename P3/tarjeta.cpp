@@ -20,7 +20,7 @@ Numero::Numero(const Cadena &C)
         numero_ = aux;
     }
 
-    if (std::find_if(numero_.begin(), numero_.end(), std::not1(EsDigito())) != numero_.end())
+    if (std::find_if(numero_.begin(), numero_.end(), std::not_fn(EsDigito())) != numero_.end())
     {
         throw Numero::Incorrecto(Numero::DIGITOS);
     }

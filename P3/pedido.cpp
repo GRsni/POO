@@ -6,15 +6,16 @@
 #include "tarjeta.hpp"
 #include "fecha.hpp"
 
+int Pedido::contador_pedidos = 0;
+
 Pedido::Pedido(Usuario_Pedido &up,
                Pedido_Articulo &pa,
                Usuario &u,
                const Tarjeta &t,
-               const Fecha f) : numPed(Pedido::contador_pedidos + 1),
-                                tarjeta_(&t),
-                                fecha_(&f),
-                                importe(0),
-                                pedidosTotales(0)
+               const Fecha &f) : numPed(Pedido::contador_pedidos + 1),
+                                 tarjeta_(&t),
+                                 fecha_(&f),
+                                 importe(0)
 {
     if (tarjeta_->titular() != &u)
     {
@@ -44,7 +45,7 @@ Pedido::Pedido(Usuario_Pedido &up,
 
     for (auto c : carro)
     {
-        pa.pedir(this, *c.first, c.first->precio(), c.second);
+        pa.pedir(*this, *c.first, c.first->precio(), c.second);
         importe += c.first->precio();
         c.first->stock() -= c.second; //Se reduce el stock del articulo
         u.compra(*c.first, 0);

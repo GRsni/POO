@@ -17,7 +17,7 @@ void Usuario_Pedido::asocia(Pedido &p, Usuario &u)
     asocia(u, p);
 }
 
-Usuario_Pedido::Pedidos Usuario_Pedido::pedidos(Usuario &u)
+const Usuario_Pedido::Pedidos &Usuario_Pedido::pedidos(Usuario &u)
 {
     auto set_pedidos = usuario_pedidos.find(&u);
     if (set_pedidos != usuario_pedidos.end())
@@ -26,11 +26,11 @@ Usuario_Pedido::Pedidos Usuario_Pedido::pedidos(Usuario &u)
     }
     else
     {
-        return Pedidos();
+        return {};
     }
 }
 
-Usuario *Usuario_Pedido::cliente(Pedido &p)
+const Usuario *Usuario_Pedido::cliente(Pedido &p)
 {
     auto usuario = pedido_usuario.find(&p);
     if (usuario != pedido_usuario.end())
