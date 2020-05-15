@@ -1,4 +1,3 @@
-
 #include <map>
 #include <set>
 
@@ -19,15 +18,7 @@ void Usuario_Pedido::asocia(Pedido &p, Usuario &u)
 
 const Usuario_Pedido::Pedidos &Usuario_Pedido::pedidos(Usuario &u)
 {
-    auto set_pedidos = usuario_pedidos.find(&u);
-    if (set_pedidos != usuario_pedidos.end())
-    {
-        return set_pedidos->second;
-    }
-    else
-    {
-        return {};
-    }
+    return usuario_pedidos[&u];
 }
 
 const Usuario *Usuario_Pedido::cliente(Pedido &p)

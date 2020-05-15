@@ -29,7 +29,7 @@ std::ostream &operator<<(std::ostream &out, const LineaPedido &lp);
 
 class Pedido_Articulo
 {
-    class OrdenaArticulos
+    struct OrdenaArticulos
     {
         bool operator()(const Articulo *a, const Articulo *b) const
         {
@@ -37,7 +37,7 @@ class Pedido_Articulo
         }
     };
 
-    class OrdenaPedidos
+    struct OrdenaPedidos
     {
         bool operator()(const Pedido *a, const Pedido *b) const;
     };
@@ -48,8 +48,8 @@ public:
 
     void pedir(const Pedido &p, const Articulo &a, double precio, unsigned int cantidad = 1);
     void pedir(const Articulo &a, const Pedido &p, double precio, unsigned int cantidad = 1);
-    const ItemsPedido &detalle(const Pedido &p) const;
-    const Pedidos &ventas(const Articulo &a) const;
+    const ItemsPedido &detalle(Pedido &p) const;
+    const Pedidos &ventas(Articulo &a) const;
 
     void mostrarDetallePedidos(std::ostream &out);
     void mostrarVentasArticulos(std::ostream &out);

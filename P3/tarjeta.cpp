@@ -1,11 +1,11 @@
-#include "tarjeta.hpp"
-
 #include <ctype.h>
 #include <iomanip>
 #include <cstring>
 #include <utility>
 #include <functional>
 #include <algorithm>
+
+#include "tarjeta.hpp"
 
 Numero::Numero(const Cadena &C)
 {
@@ -139,5 +139,6 @@ std::ostream &operator<<(std::ostream &out, const Tarjeta &t)
         << "| Caduca: " << std::setw(2) << std::setfill('0') << std::right << t.caducidad().mes() << "/"
         << (t.caducidad().anno() % 100) << Cadena(tam - 13, ' ') << "|" << std::endl
         << "+" << Cadena(tam + 1, '-') << "+" << std::endl;
+    out << std::resetiosflags(std::ios::showbase);
     return out;
 }

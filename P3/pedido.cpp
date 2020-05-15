@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 
 #include "pedido.hpp"
 #include "usuario-pedido.hpp"
@@ -58,9 +59,10 @@ Pedido::Pedido(Usuario_Pedido &up,
 
 std::ostream &operator<<(std::ostream &out, const Pedido &p)
 {
-    out << "Núm. pedido: \t" << p.numero()
-        << "Fecha: \t" << p.fecha()
-        << "Pagado con: \t" << p.tarjeta().tipo() << " n.º: " << p.tarjeta().numero()
-        << "Importe: \t" << p.total();
+    out << "Núm. pedido: \t" << p.numero() << "\n"
+        << "Fecha: \t\t" << p.fecha() << "\n"
+        << "Pagado con: \t" << p.tarjeta().tipo() << " n.º: " << p.tarjeta().numero() << "\n"
+        << "Importe: \t" << std::fixed << std::setprecision(2) << p.total() << " \u20AC" << std::endl;
+    out << std::resetiosflags(std::ios::fixed);
     return out;
 }

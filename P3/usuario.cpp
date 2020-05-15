@@ -141,7 +141,7 @@ std::ostream &mostrar_carro(std::ostream &out, const Usuario &u) noexcept
 {
     out << "Carrito de la compra de " << u.id() << " [Artículos: " << u.n_articulos() << "]" << std::endl;
     out << " Cant.  Articulo" << std::endl;
-    out << "=======================================================================" << std::endl;
+    out << Cadena(72, '=') << std::endl;
     if (u.articulos_.size() > 0)
     {
         for (auto it = u.articulos_.begin(); it != u.articulos_.end(); ++it)

@@ -29,61 +29,85 @@ void Pedido_Articulo::pedir(const Articulo &a, const Pedido &p, double precio, u
     pedir(p, a, precio, cantidad);
 }
 
-const Pedido_Articulo::ItemsPedido &Pedido_Articulo::detalle(const Pedido &p) const
+const Pedido_Articulo::ItemsPedido &Pedido_Articulo::detalle(Pedido &p) const
 {
-    auto it = pedido_articulos.find(const_cast<Pedido *>(&p));
-    if (it != pedido_articulos.end())
-    {
-        return it->second;
-    }
-    else
-    {
-        return {};
-    }
+    return pedido_articulos.find(&p)->second;
 }
 
-const Pedido_Articulo::Pedidos &Pedido_Articulo::ventas(const Articulo &a) const
+const Pedido_Articulo::Pedidos &Pedido_Articulo::ventas(Articulo &a) const
 {
-    auto it = articulo_pedidos.find(const_cast<Articulo *>(&a));
-    if (it != articulo_pedidos.end())
-    {
-        return it->second;
-    }
-    else
-    {
-        return {};
-    }
+    return articulo_pedidos.find(&a)->second;
 }
 
 void Pedido_Articulo::mostrarDetallePedidos(std::ostream &out)
 {
+    double totalVentas = 0;
+
+    for (auto pedido : pedido_articulos)
+    {
+        out << "Pedido núm. " << pedido.first->numero() << "\n"
+            << "Cliente: " << pedido.first->tarjeta().titular()->id() << "\t\t"
+            << "Fecha: " << pedido.first->fecha() << "\n\n";
+        out << detalle(*pedido.first);
+        for (auto itemsPed : detalle(*pedido.first))
+        {
+            totalVentas += itemsPed.second.precio_venta() * itemsPed.second.cantidad();
+        }
+    }
+
+    out << "\nTOTAL VENTAS \t\t" << std::setw(2) << std::fixed << std::setprecision(2) << totalVentas << "\n";
+    out << std::resetiosflags(std::ios::fixed);
 }
 
 void Pedido_Articulo::mostrarVentasArticulos(std::ostream &out)
 {
+    for (auto articulo : articulo_pedidos)
+    {
+        out << "Ventas de [" << articulo.first->referencia() << "] \"" << articulo.first->titulo() << "\"\n";
+    }
 }
 
 std::ostream &operator<<(std::ostream &out, const Pedido_Articulo::ItemsPedido &ip)
 {
     double total = 0;
-    out << "  PVP\tCantidad\t\tArticulo\n"
-        << Cadena(30, '=') << std::endl;
+    out << "  PVP\tCantidad\tArticulo\n"
+        << Cadena(72, '=') << std::endl;
 
+    out << std::setw(2) << std::setprecision(2);
     for (auto it : ip)
     {
-        out << (*it.first);
+        out << it.second << "\t\t"
+            << "[" << it.first->referencia() << "] \""
+            << it.first->titulo() << "\"" << std::endl;
+        total += (*it.first).precio();
     }
+
+    out << Cadena(72, '=') << "\n"
+        << "Total: " << std::setw(2) << std::setprecision(2) << total << " \u20AC\n"
+        << std::endl;
+    out << std::resetiosflags(std::ios::fixed);
     return out;
 }
 
-std::ostream &operator<<(std::ostream &out, const Pedido_Articulo::Pedidos &p)
+std::ostream &operator<<(std::ostream &out, const Pedido_Articulo::Pedidos &ps)
 {
     double total = 0;
+    unsigned int items = 0;
 
-    out << "[Pedidos: " << p.size() << "]\n"
-        << Cadena(30, '=') << std::endl
+    out << "[Pedidos: " << ps.size() << "]\n"
+        << Cadena(72, '=') << std::endl
         << "  PVP\tCantidad\t\tFecha de venta\n"
-        << Cadena(30, '=') << std::endl;
+        << Cadena(72, '=') << std::endl;
 
+    for (auto it : ps)
+    {
+        out << it.second << "\t\t" << it.first->fecha() << "\n";
+        total += it.second.precio_venta() * it.second.cantidad();
+        items += it.second.cantidad();
+    }
+
+    out << std::setw(2) << std::setprecision(2) << total << " \u20AC \t" << items << std::endl;
+
+    out << std::resetiosflags(std::ios::fixed);
     return out;
 }

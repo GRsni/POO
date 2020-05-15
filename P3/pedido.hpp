@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "../P1/fecha.hpp"
+#include "fecha.hpp"
 #include "usuario.hpp"
 #include "usuario-pedido.hpp"
 #include "tarjeta.hpp"

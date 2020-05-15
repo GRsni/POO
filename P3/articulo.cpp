@@ -33,5 +33,6 @@ std::ostream &operator<<(std::ostream &out, Articulo &A)
         << std::fixed << std::setprecision(2) << A.precio() << " \u20AC"
         << std::defaultfloat;
     std::locale::global(std::locale("C"));
+    out << std::resetiosflags(std::ios::fixed);
     return out;
 }

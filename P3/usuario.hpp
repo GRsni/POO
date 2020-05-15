@@ -8,7 +8,7 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "../P1/cadena.hpp"
+#include "cadena.hpp"
 #include "articulo.hpp"
 #include "tarjeta.hpp"
 
