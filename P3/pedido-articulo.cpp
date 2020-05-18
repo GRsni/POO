@@ -120,7 +120,7 @@ std::ostream &operator<<(std::ostream &out, const Pedido_Articulo::Pedidos &ps)
         items += it.second.cantidad();
     }
     out << "=================================================================" << std::endl
-        << std::setprecision(2) << total << " \u20AC \t" << items << std::endl;
+        << std::setprecision(2) << total << " € \t" << items << std::endl;
 
     return out;
 }

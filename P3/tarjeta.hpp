@@ -81,12 +81,12 @@ public:
     class Caducada
     {
     public:
-        Caducada(const Fecha &f) : fecha(&f) {}
+        Caducada(const Fecha f) : fecha(f) {}
 
-        const Fecha &cuando() const { return *fecha; }
+        const Fecha cuando() const { return fecha; }
 
     private:
-        const Fecha *fecha;
+        const Fecha fecha;
     };
 
     class Desactivada
