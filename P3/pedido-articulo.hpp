@@ -14,15 +14,15 @@ class Articulo;
 class LineaPedido
 {
 public:
-    explicit LineaPedido(double precio, double cantidad = 1) noexcept : precio_(precio),
-                                                                        cantidad_(cantidad) {}
+    explicit LineaPedido(double precio, unsigned int cantidad = 1) noexcept : precio_(precio),
+                                                                              cantidad_(cantidad) {}
 
     const double precio_venta() const noexcept { return precio_; }
     const double cantidad() const noexcept { return cantidad_; }
 
 private:
-    const double precio_;
-    const double cantidad_;
+    double precio_;
+    unsigned int cantidad_;
 };
 
 std::ostream &operator<<(std::ostream &out, const LineaPedido &lp);
@@ -31,7 +31,7 @@ class Pedido_Articulo
 {
     struct OrdenaArticulos
     {
-        bool operator()(const Articulo *a, const Articulo *b) const
+        bool operator()(Articulo *a, Articulo *b) const
         {
             return a->referencia() < b->referencia();
         }
@@ -39,17 +39,18 @@ class Pedido_Articulo
 
     struct OrdenaPedidos
     {
-        bool operator()(const Pedido *a, const Pedido *b) const;
+        bool operator()(Pedido *a, Pedido *b) const;
     };
 
 public:
     typedef std::map<Articulo *, LineaPedido, OrdenaArticulos> ItemsPedido;
     typedef std::map<Pedido *, LineaPedido, OrdenaPedidos> Pedidos;
 
-    void pedir(const Pedido &p, const Articulo &a, double precio, unsigned int cantidad = 1);
-    void pedir(const Articulo &a, const Pedido &p, double precio, unsigned int cantidad = 1);
-    const ItemsPedido &detalle(Pedido &p) const;
-    const Pedidos &ventas(Articulo &a) const;
+    void pedir(Pedido &p, Articulo &a, double precio, unsigned int cantidad = 1);
+    void pedir(Articulo &a, Pedido &p, double precio, unsigned int cantidad = 1);
+
+    const ItemsPedido &detalle(Pedido &p);
+    const Pedidos &ventas(Articulo &a);
 
     void mostrarDetallePedidos(std::ostream &out);
     void mostrarVentasArticulos(std::ostream &out);

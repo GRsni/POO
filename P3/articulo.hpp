@@ -8,18 +8,17 @@
 class Articulo
 {
 public:
-    Articulo(const Cadena &ref, const Cadena &c, const Fecha &f, double precio, double stock = 0);
-    Articulo(const Articulo &A);
+    Articulo(const Cadena &ref, const Cadena &c, const Fecha &f, double precio, unsigned int stock = 0);
 
     Articulo &operator=(const Articulo &A);
 
-    const Cadena &referencia() const;
-    const Cadena &titulo() const;
-    const Fecha &f_publi() const;
-    const double precio() const;
-    double &precio();
-    const double stock() const;
-    double &stock();
+    const Cadena &referencia() const { return referencia_; };
+    const Cadena &titulo() const { return titulo_; };
+    const Fecha &f_publi() const { return f_publi_; };
+    const double precio() const { return precio_; };
+    double &precio() { return precio_; };
+    const unsigned int stock() const { return stock_; };
+    unsigned int &stock() { return stock_; };
 
     ~Articulo();
 
@@ -28,7 +27,7 @@ private:
     const Cadena titulo_;
     const Fecha f_publi_;
     double precio_;
-    double stock_;
+    unsigned int stock_;
 };
 
 std::ostream &operator<<(std::ostream &in, Articulo &A);

@@ -7,8 +7,6 @@
 
 #include "usuario.hpp"
 
-Clave::Incorrecta::Incorrecta(const Clave::Razon r) noexcept : razon_(r) {}
-
 Clave::Clave(const char *cad)
 {
     if (std::strlen(cad) < 5)
@@ -16,9 +14,18 @@ Clave::Clave(const char *cad)
         throw Clave::Incorrecta(Clave::CORTA);
     }
 
-    const char *salt_ = salt();
-    char *cifrada = crypt(cad, salt_);
-    delete[] salt_;
+    const char *simbolos = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
+    char *salt = new char[2];
+
+    static std::random_device rd;
+    static std::uniform_int_distribution<size_t> dist(0, 63);
+
+    salt[0] = simbolos[dist(rd)];
+    salt[1] = simbolos[dist(rd)];
+    char *cifrada = crypt(cad, salt);
+
+    delete[] salt;
+
     if (cifrada == nullptr)
     {
         throw Clave::Incorrecta(Clave::ERROR_CRYPT);
@@ -47,22 +54,6 @@ const bool Clave::verifica(const char *cad) const
     return strcmp(prueba, clave_.c_str()) == 0;
 }
 
-/****************************METODOS PRIVADOS CLAVE***********************************/
-
-const char *Clave::salt() const noexcept
-{
-    const char *simbolos = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789./";
-    char *salt = new char[2];
-
-    static std::random_device rd;
-    static std::uniform_int_distribution<size_t> dist(0, 63);
-
-    salt[0] = simbolos[dist(rd)];
-    salt[1] = simbolos[dist(rd)];
-
-    return salt;
-}
-
 /*************************************METODOS USUARIO************************************/
 
 std::unordered_set<Cadena> Usuario::identificadores;
@@ -71,11 +62,11 @@ Usuario::Usuario(const Cadena &id,
                  const Cadena &nom,
                  const Cadena &apel,
                  const Cadena &dir,
-                 const Clave &clave) : identificador_(id),
-                                       nombre_(nom),
-                                       apellidos_(apel),
-                                       direccion_(dir),
-                                       contrasenna_(clave)
+                 Clave clave) : identificador_(id),
+                                nombre_(nom),
+                                apellidos_(apel),
+                                direccion_(dir),
+                                contrasenna_(clave)
 {
     if (!Usuario::identificadores.insert(identificador_).second)
     {
@@ -97,7 +88,7 @@ void Usuario::no_es_titular_de(Tarjeta &t) noexcept
     if (it != tarjetas_.end())
     {
         t.anula_titular();
-        tarjetas_.erase(t.numero());
+        tarjetas_.erase(it);
     }
 }
 

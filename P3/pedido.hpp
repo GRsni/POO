@@ -18,7 +18,7 @@ public:
     class Vacio
     {
     public:
-        Vacio(const Usuario &u) : usuario_(&u) {}
+        Vacio(const Usuario *u) : usuario_(u) {}
         const Usuario &usuario() const { return *usuario_; }
 
     private:
@@ -28,7 +28,7 @@ public:
     class Impostor
     {
     public:
-        Impostor(const Usuario &u) : usuario_(&u) {}
+        Impostor(const Usuario *u) : usuario_(u) {}
         const Usuario &usuario() const { return *usuario_; }
 
     private:
@@ -38,7 +38,7 @@ public:
     class SinStock
     {
     public:
-        SinStock(const Articulo &a) : articulo_(&a) {}
+        SinStock(const Articulo *a) : articulo_(a) {}
         const Articulo &articulo() const { return *articulo_; }
 
     private:
@@ -46,20 +46,24 @@ public:
     };
 
     Pedido(Usuario_Pedido &up, Pedido_Articulo &pa, Usuario &u, const Tarjeta &t, const Fecha &f = Fecha());
-    double numero() const { return numPed; }
-    const Tarjeta &tarjeta() const { return *tarjeta_; }
-    const Fecha &fecha() const { return *fecha_; }
+    Pedido(const Pedido &p) = delete;
+
+    Pedido &operator=(const Pedido &p) = delete;
+
+    unsigned int numero() const { return numPed; }
+    const Tarjeta *tarjeta() const { return tarjeta_; }
+    const Fecha fecha() const { return fecha_; }
     double total() const { return importe; }
 
-    static double n_total_pedidos() { return contador_pedidos; }
+    static unsigned int n_total_pedidos() { return contador_pedidos; }
 
 private:
-    double numPed;
+    unsigned int numPed;
     const Tarjeta *tarjeta_;
-    const Fecha *fecha_;
+    Fecha fecha_;
     double importe;
 
-    static int contador_pedidos;
+    static unsigned int contador_pedidos;
 };
 
 std::ostream &operator<<(std::ostream &out, const Pedido &p);

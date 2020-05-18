@@ -17,8 +17,8 @@ public:
 
     void asocia(Usuario &u, Pedido &p);
     void asocia(Pedido &p, Usuario &u);
-    const Pedidos &pedidos(Usuario &u);
-    const Usuario *cliente(Pedido &p);
+    Pedidos &pedidos(Usuario &u);
+    Usuario *cliente(Pedido &p);
 
 private:
     typedef std::map<Usuario *, Pedidos> UP;

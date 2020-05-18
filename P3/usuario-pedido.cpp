@@ -8,7 +8,7 @@
 void Usuario_Pedido::asocia(Usuario &u, Pedido &p)
 {
     usuario_pedidos[&u].insert(&p);
-    pedido_usuario[&p] = &u;
+    pedido_usuario.insert(std::make_pair(&p, &u));
 }
 
 void Usuario_Pedido::asocia(Pedido &p, Usuario &u)
@@ -16,12 +16,12 @@ void Usuario_Pedido::asocia(Pedido &p, Usuario &u)
     asocia(u, p);
 }
 
-const Usuario_Pedido::Pedidos &Usuario_Pedido::pedidos(Usuario &u)
+Usuario_Pedido::Pedidos &Usuario_Pedido::pedidos(Usuario &u)
 {
-    return usuario_pedidos[&u];
+    return usuario_pedidos.find(&u)->second;
 }
 
-const Usuario *Usuario_Pedido::cliente(Pedido &p)
+Usuario *Usuario_Pedido::cliente(Pedido &p)
 {
     auto usuario = pedido_usuario.find(&p);
     if (usuario != pedido_usuario.end())

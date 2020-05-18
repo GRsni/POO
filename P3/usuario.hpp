@@ -27,7 +27,7 @@ public:
     class Incorrecta
     {
     public:
-        Incorrecta(const Clave::Razon r) noexcept;
+        Incorrecta(const Clave::Razon r) noexcept : razon_(r) {}
         const Clave::Razon razon() const noexcept { return razon_; };
 
     private:
@@ -39,13 +39,11 @@ public:
 
     Clave &operator=(const Clave &C) noexcept;
 
-    const Cadena clave() const noexcept { return clave_; };
+    Cadena clave() const noexcept { return clave_; };
     const bool verifica(const char *cad) const;
 
 private:
     Cadena clave_;
-
-    const char *salt() const noexcept;
 };
 
 class Usuario
@@ -65,16 +63,18 @@ public:
         const Cadena idd_;
     };
 
-    Usuario(const Cadena &id, const Cadena &nom, const Cadena &apel, const Cadena &dir, const Clave &clave);
+    Usuario(const Cadena &id, const Cadena &nom, const Cadena &apel, const Cadena &dir, Clave clave);
     Usuario(const Usuario &U) = delete;
+    Usuario(const Usuario &&U) = delete;
     Usuario &operator=(const Usuario &U) = delete;
+    Usuario &operator=(const Usuario &&U) = delete;
 
-    const Cadena id() const noexcept { return identificador_; }
-    const Cadena nombre() const noexcept { return nombre_; }
-    const Cadena apellidos() const noexcept { return apellidos_; }
-    const Cadena direccion() const noexcept { return direccion_; }
+    const Cadena &id() const noexcept { return identificador_; }
+    const Cadena &nombre() const noexcept { return nombre_; }
+    const Cadena &apellidos() const noexcept { return apellidos_; }
+    const Cadena &direccion() const noexcept { return direccion_; }
     const Tarjetas &tarjetas() const noexcept { return tarjetas_; }
-    const Articulos compra() const noexcept { return articulos_; }
+    const Articulos &compra() const noexcept { return articulos_; }
     void compra(Articulo &a, int cantidad = 1) noexcept;
 
     void es_titular_de(Tarjeta &T) noexcept;
@@ -93,7 +93,7 @@ private:
         nombre_,
         apellidos_,
         direccion_;
-    const Clave contrasenna_;
+    Clave contrasenna_;
     Tarjetas tarjetas_;
     Articulos articulos_;
 

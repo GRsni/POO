@@ -19,11 +19,11 @@ Numero::Numero(const Cadena &C)
         Cadena aux = (numero_.c_str());
         numero_ = aux;
     }
-
     if (std::find_if(numero_.begin(), numero_.end(), std::not_fn(EsDigito())) != numero_.end())
     {
         throw Numero::Incorrecto(Numero::DIGITOS);
     }
+
     if (numero_.length() < 13 || numero_.length() > 19)
     {
         throw Numero::Incorrecto(Numero::LONGITUD);
@@ -42,10 +42,12 @@ bool operator<(const Numero &a, const Numero &b)
 
 std::set<Numero> Tarjeta::coleccion;
 
-Tarjeta::Tarjeta(const Numero &num, const Usuario &us, const Fecha &f) : numero_(num),
-                                                                         titular_(&us),
-                                                                         caducidad_(f),
-                                                                         activa_(true)
+Cadena Tarjeta::tipos[] = {"American Express", "JCB", "VISA", "Mastercard", "Maestro", "Tipo indeterminado"};
+
+Tarjeta::Tarjeta(const Numero &num, Usuario &us, const Fecha &f) : numero_(num),
+                                                                   titular_(&us),
+                                                                   caducidad_(f),
+                                                                   activa_(true)
 {
     if (caducidad_ < Fecha())
     {
@@ -116,10 +118,9 @@ bool operator<(const Tarjeta &a, const Tarjeta &b)
     return a.numero() < b.numero();
 }
 
-std::ostream &operator<<(std::ostream &out, const Tarjeta::Tipo &t)
+std::ostream &operator<<(std::ostream &out, const Tarjeta::Tipo t)
 {
-    const Cadena tipos[] = {"American Express", "JCB", "VISA", "Mastercard", "Maestro", "Otro"};
-    out << tipos[t];
+    out << Tarjeta::tipos[t];
     return out;
 }
 
@@ -139,6 +140,6 @@ std::ostream &operator<<(std::ostream &out, const Tarjeta &t)
         << "| Caduca: " << std::setw(2) << std::setfill('0') << std::right << t.caducidad().mes() << "/"
         << (t.caducidad().anno() % 100) << Cadena(tam - 13, ' ') << "|" << std::endl
         << "+" << Cadena(tam + 1, '-') << "+" << std::endl;
-    out << std::resetiosflags(std::ios::showbase);
+    //out << std::resetiosflags(std::ios::fixed);
     return out;
 }

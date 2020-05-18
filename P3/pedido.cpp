@@ -7,50 +7,52 @@
 #include "tarjeta.hpp"
 #include "fecha.hpp"
 
-int Pedido::contador_pedidos = 0;
+unsigned int Pedido::contador_pedidos = 0;
 
 Pedido::Pedido(Usuario_Pedido &up,
                Pedido_Articulo &pa,
                Usuario &u,
                const Tarjeta &t,
-               const Fecha &f) : numPed(Pedido::contador_pedidos + 1),
+               const Fecha &f) : numPed(contador_pedidos + 1),
                                  tarjeta_(&t),
-                                 fecha_(&f),
+                                 fecha_(f),
                                  importe(0)
 {
-    if (tarjeta_->titular() != &u)
+    if (t.titular() != &u)
     {
-        throw Pedido::Impostor(u);
+        throw Pedido::Impostor(&u);
     }
-    if (!tarjeta_->activa())
+    if (!t.activa())
     {
         throw Tarjeta::Desactivada();
     }
-    if (tarjeta_->caducidad() < f)
+    if (t.caducidad() < f)
     {
-        throw Tarjeta::Caducada(f);
+        throw Tarjeta::Caducada(t.caducidad());
     }
     if (u.n_articulos() == 0)
     {
-        throw Pedido::Vacio(u);
+        throw Pedido::Vacio(&u);
     }
+
     for (auto a : u.compra())
     {
         if (a.second > a.first->stock())
         {
-            throw Pedido::SinStock(*a.first);
+            const_cast<Usuario::Articulos &>(u.compra()).clear();
+            throw Pedido::SinStock(a.first);
         }
     }
 
-    Usuario::Articulos carro = u.compra();
-
-    for (auto c : carro)
+    for (auto c : u.compra())
     {
         pa.pedir(*this, *c.first, c.first->precio(), c.second);
-        importe += c.first->precio();
+        importe += c.first->precio() * c.second;
+        std::cout << "Añadido al pedido " << c.first->titulo() << ", cantidad: " << c.second << ", precio: " << c.first->precio() * c.second << std::endl;
         c.first->stock() -= c.second; //Se reduce el stock del articulo
-        u.compra(*c.first, 0);
     }
+
+    const_cast<Usuario::Articulos &>(u.compra()).clear();
 
     up.asocia(*this, u);
 
@@ -59,10 +61,9 @@ Pedido::Pedido(Usuario_Pedido &up,
 
 std::ostream &operator<<(std::ostream &out, const Pedido &p)
 {
-    out << "Núm. pedido: \t" << p.numero() << "\n"
-        << "Fecha: \t\t" << p.fecha() << "\n"
-        << "Pagado con: \t" << p.tarjeta().tipo() << " n.º: " << p.tarjeta().numero() << "\n"
-        << "Importe: \t" << std::fixed << std::setprecision(2) << p.total() << " \u20AC" << std::endl;
-    out << std::resetiosflags(std::ios::fixed);
+    out << "Núm. pedido: \t" << p.numero() << std::endl
+        << "Fecha: \t\t" << p.fecha() << std::endl
+        << "Pagado con: \t" << p.tarjeta()->tipo() << " n.º: " << p.tarjeta()->numero() << std::endl
+        << "Importe: \t" << std::fixed << std::setprecision(2) << p.total() << " €" << std::endl;
     return out;
 }

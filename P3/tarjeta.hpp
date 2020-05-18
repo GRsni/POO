@@ -23,7 +23,7 @@ public:
 
     struct EsBlanco
     {
-        bool operator()(char c) const { return c == ' '; };
+        bool operator()(char c) const { return isspace(c); };
     };
 
     struct EsDigito
@@ -55,6 +55,8 @@ class Tarjeta
     friend class Usuario;
 
 public:
+    static Cadena tipos[6];
+
     enum Tipo
     {
         AmericanExpress,
@@ -79,25 +81,27 @@ public:
     class Caducada
     {
     public:
-        Caducada(Fecha f) : fecha(f) {}
+        Caducada(const Fecha &f) : fecha(&f) {}
 
-        const Fecha cuando() const { return fecha; }
+        const Fecha &cuando() const { return *fecha; }
 
     private:
-        const Fecha fecha;
+        const Fecha *fecha;
     };
 
     class Desactivada
     {
     };
 
-    Tarjeta(const Numero &num, const Usuario &us, const Fecha &fecha);
+    Tarjeta(const Numero &num, Usuario &us, const Fecha &fecha);
     Tarjeta(const Tarjeta &T) = delete;
+    Tarjeta(const Tarjeta &&T) = delete;
     Tarjeta &operator=(const Tarjeta &T) = delete;
+    Tarjeta &operator==(const Tarjeta &&T) = delete;
 
-    const Numero numero() const { return numero_; }
+    const Numero &numero() const { return numero_; }
     const Usuario *titular() const { return titular_; }
-    const Fecha caducidad() const { return caducidad_; }
+    const Fecha &caducidad() const { return caducidad_; }
     bool activa() const { return activa_; }
     bool activa(bool act = true);
     const Tipo tipo() const;
@@ -118,7 +122,7 @@ private:
 
 bool operator<(const Tarjeta &a, const Tarjeta &b);
 
-std::ostream &operator<<(std::ostream &out, const Tarjeta::Tipo &t);
+std::ostream &operator<<(std::ostream &out, const Tarjeta::Tipo t);
 std::ostream &operator<<(std::ostream &out, const Tarjeta &T);
 
 #endif //TARJETA_H
