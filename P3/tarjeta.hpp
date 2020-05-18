@@ -23,7 +23,7 @@ public:
 
     struct EsBlanco
     {
-        bool operator()(char c) const { return c == ' '; };
+        bool operator()(char c) const { return isspace(c); };
     };
 
     struct EsDigito
@@ -55,6 +55,8 @@ class Tarjeta
     friend class Usuario;
 
 public:
+    static Cadena tipos[6];
+
     enum Tipo
     {
         AmericanExpress,
@@ -68,23 +70,23 @@ public:
     class Num_duplicado
     {
     public:
-        Num_duplicado(const Numero num) : num_(num) {}
+        Num_duplicado(const Numero &num) : num_(&num) {}
 
-        const Numero que() const { return num_; }
+        const Numero &que() const { return *num_; }
 
     private:
-        const Numero num_;
+        const Numero *num_;
     };
 
     class Caducada
     {
     public:
-        Caducada(Fecha f) : fecha(f) {}
+        Caducada(const Fecha &f) : fecha(&f) {}
 
-        const Fecha cuando() const { return fecha; }
+        const Fecha &cuando() const { return *fecha; }
 
     private:
-        const Fecha fecha;
+        const Fecha *fecha;
     };
 
     class Desactivada
@@ -95,7 +97,7 @@ public:
     Tarjeta(const Tarjeta &T) = delete;
     Tarjeta &operator=(const Tarjeta &T) = delete;
 
-    const Numero numero() const { return numero_; }
+    const Numero &numero() const { return *numero_; }
     const Usuario *titular() const { return titular_; }
     const Fecha caducidad() const { return caducidad_; }
     bool activa() const { return activa_; }
@@ -105,7 +107,7 @@ public:
     ~Tarjeta();
 
 private:
-    const Numero numero_;
+    const Numero *numero_;
     const Usuario *titular_;
     const Fecha caducidad_;
     bool activa_ = true;

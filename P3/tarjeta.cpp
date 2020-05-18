@@ -19,11 +19,12 @@ Numero::Numero(const Cadena &C)
         Cadena aux = (numero_.c_str());
         numero_ = aux;
     }
-
+    std::cout << "tam numero:" << numero_.length() << std::endl;
     if (std::find_if(numero_.begin(), numero_.end(), std::not_fn(EsDigito())) != numero_.end())
     {
         throw Numero::Incorrecto(Numero::DIGITOS);
     }
+
     if (numero_.length() < 13 || numero_.length() > 19)
     {
         throw Numero::Incorrecto(Numero::LONGITUD);
@@ -42,7 +43,9 @@ bool operator<(const Numero &a, const Numero &b)
 
 std::set<Numero> Tarjeta::coleccion;
 
-Tarjeta::Tarjeta(const Numero &num, const Usuario &us, const Fecha &f) : numero_(num),
+Cadena Tarjeta::tipos[] = {"American Express", "JCB", "VISA", "Mastercard", "Maestro", "Otro"};
+
+Tarjeta::Tarjeta(const Numero &num, const Usuario &us, const Fecha &f) : numero_(&num),
                                                                          titular_(&us),
                                                                          caducidad_(f),
                                                                          activa_(true)
@@ -51,9 +54,9 @@ Tarjeta::Tarjeta(const Numero &num, const Usuario &us, const Fecha &f) : numero_
     {
         throw Tarjeta::Caducada(caducidad_);
     }
-    if (!Tarjeta::coleccion.insert(numero_).second)
+    if (!Tarjeta::coleccion.insert(*numero_).second)
     {
-        throw Tarjeta::Num_duplicado(numero_);
+        throw Tarjeta::Num_duplicado(*numero_);
     }
 
     const_cast<Usuario *>(titular_)->es_titular_de(*this);
@@ -67,9 +70,9 @@ bool Tarjeta::activa(bool act)
 
 const Tarjeta::Tipo Tarjeta::tipo() const
 {
-    if (numero_[0] == '3')
+    if (*numero_[0] == '3')
     {
-        if (numero_[1] == '4' || numero_[1] == '7')
+        if (*numero_[1] == '4' || *numero_[1] == '7')
         {
             return Tarjeta::Tipo::AmericanExpress;
         }
@@ -78,15 +81,15 @@ const Tarjeta::Tipo Tarjeta::tipo() const
             return Tarjeta::Tipo::JCB;
         }
     }
-    else if (numero_[0] == '4')
+    else if (*numero_[0] == '4')
     {
         return Tarjeta::Tipo::VISA;
     }
-    else if (numero_[0] == '5')
+    else if (*numero_[0] == '5')
     {
         return Tarjeta::Tipo::Mastercard;
     }
-    else if (numero_[0] == '6')
+    else if (*numero_[0] == '6')
     {
         return Tarjeta::Tipo::Maestro;
     }
@@ -108,7 +111,7 @@ Tarjeta::~Tarjeta()
     {
         const_cast<Usuario *>(titular_)->no_es_titular_de(*this);
     }
-    Tarjeta::coleccion.erase(numero_);
+    Tarjeta::coleccion.erase(*numero_);
 }
 
 bool operator<(const Tarjeta &a, const Tarjeta &b)
@@ -118,8 +121,7 @@ bool operator<(const Tarjeta &a, const Tarjeta &b)
 
 std::ostream &operator<<(std::ostream &out, const Tarjeta::Tipo &t)
 {
-    const Cadena tipos[] = {"American Express", "JCB", "VISA", "Mastercard", "Maestro", "Otro"};
-    out << tipos[t];
+    out << Tarjeta::tipos[t];
     return out;
 }
 

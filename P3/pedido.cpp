@@ -11,7 +11,7 @@ int Pedido::contador_pedidos = 0;
 
 Pedido::Pedido(Usuario_Pedido &up,
                Pedido_Articulo &pa,
-               Usuario &u,
+               const Usuario &u,
                const Tarjeta &t,
                const Fecha &f) : numPed(Pedido::contador_pedidos + 1),
                                  tarjeta_(&t),
@@ -26,18 +26,20 @@ Pedido::Pedido(Usuario_Pedido &up,
     {
         throw Tarjeta::Desactivada();
     }
-    if (tarjeta_->caducidad() < f)
+    if (tarjeta_->caducidad() < *fecha_)
     {
-        throw Tarjeta::Caducada(f);
+        throw Tarjeta::Caducada(t.caducidad());
     }
     if (u.n_articulos() == 0)
     {
         throw Pedido::Vacio(u);
     }
+
     for (auto a : u.compra())
     {
         if (a.second > a.first->stock())
         {
+            const_cast<Usuario::Articulos &>(u.compra()).clear();
             throw Pedido::SinStock(*a.first);
         }
     }
@@ -49,10 +51,10 @@ Pedido::Pedido(Usuario_Pedido &up,
         pa.pedir(*this, *c.first, c.first->precio(), c.second);
         importe += c.first->precio();
         c.first->stock() -= c.second; //Se reduce el stock del articulo
-        u.compra(*c.first, 0);
+        const_cast<Usuario &>(u).compra(*c.first, 0);
     }
 
-    up.asocia(*this, u);
+    up.asocia(*this, const_cast<Usuario &>(u));
 
     contador_pedidos++;
 }
@@ -61,7 +63,7 @@ std::ostream &operator<<(std::ostream &out, const Pedido &p)
 {
     out << "Núm. pedido: \t" << p.numero() << "\n"
         << "Fecha: \t\t" << p.fecha() << "\n"
-        << "Pagado con: \t" << p.tarjeta().tipo() << " n.º: " << p.tarjeta().numero() << "\n"
+        << "Pagado con: \t" << p.tarjeta()->tipo() << " n.º: " << p.tarjeta()->numero() << "\n"
         << "Importe: \t" << std::fixed << std::setprecision(2) << p.total() << " \u20AC" << std::endl;
     out << std::resetiosflags(std::ios::fixed);
     return out;

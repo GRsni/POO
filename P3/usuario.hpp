@@ -74,7 +74,7 @@ public:
     const Cadena apellidos() const noexcept { return apellidos_; }
     const Cadena direccion() const noexcept { return direccion_; }
     const Tarjetas &tarjetas() const noexcept { return tarjetas_; }
-    const Articulos compra() const noexcept { return articulos_; }
+    const Articulos &compra() const noexcept { return articulos_; }
     void compra(Articulo &a, int cantidad = 1) noexcept;
 
     void es_titular_de(Tarjeta &T) noexcept;

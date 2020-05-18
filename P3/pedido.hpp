@@ -45,16 +45,20 @@ public:
         const Articulo *articulo_;
     };
 
-    Pedido(Usuario_Pedido &up, Pedido_Articulo &pa, Usuario &u, const Tarjeta &t, const Fecha &f = Fecha());
-    double numero() const { return numPed; }
-    const Tarjeta &tarjeta() const { return *tarjeta_; }
+    Pedido(Usuario_Pedido &up, Pedido_Articulo &pa, const Usuario &u, const Tarjeta &t, const Fecha &f = Fecha());
+    Pedido(const Pedido &p) = delete;
+
+    Pedido &operator=(const Pedido &p) = delete;
+
+    unsigned int numero() const { return numPed; }
+    const Tarjeta *tarjeta() const { return tarjeta_; }
     const Fecha &fecha() const { return *fecha_; }
     double total() const { return importe; }
 
     static double n_total_pedidos() { return contador_pedidos; }
 
 private:
-    double numPed;
+    unsigned int numPed;
     const Tarjeta *tarjeta_;
     const Fecha *fecha_;
     double importe;

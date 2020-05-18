@@ -46,8 +46,8 @@ public:
     typedef std::map<Articulo *, LineaPedido, OrdenaArticulos> ItemsPedido;
     typedef std::map<Pedido *, LineaPedido, OrdenaPedidos> Pedidos;
 
-    void pedir(const Pedido &p, const Articulo &a, double precio, unsigned int cantidad = 1);
-    void pedir(const Articulo &a, const Pedido &p, double precio, unsigned int cantidad = 1);
+    void pedir(Pedido &p, Articulo &a, double precio, unsigned int cantidad = 1);
+    void pedir(Articulo &a, Pedido &p, double precio, unsigned int cantidad = 1);
     const ItemsPedido &detalle(Pedido &p) const;
     const Pedidos &ventas(Articulo &a) const;
 

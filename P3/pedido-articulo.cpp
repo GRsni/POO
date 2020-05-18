@@ -17,14 +17,14 @@ std::ostream &operator<<(std::ostream &out, const LineaPedido &lp)
     return out;
 }
 
-void Pedido_Articulo::pedir(const Pedido &p, const Articulo &a, double precio, unsigned int cantidad)
+void Pedido_Articulo::pedir(Pedido &p, Articulo &a, double precio, unsigned int cantidad)
 {
     LineaPedido lp(a.precio(), cantidad);
-    pedido_articulos[const_cast<Pedido *>(&p)].insert(std::make_pair(const_cast<Articulo *>(&a), lp));
-    articulo_pedidos[const_cast<Articulo *>(&a)].insert(std::make_pair(const_cast<Pedido *>(&p), lp));
+    pedido_articulos[&p].insert(std::make_pair(&a, lp));
+    articulo_pedidos[&a].insert(std::make_pair(&p, lp));
 }
 
-void Pedido_Articulo::pedir(const Articulo &a, const Pedido &p, double precio, unsigned int cantidad)
+void Pedido_Articulo::pedir(Articulo &a, Pedido &p, double precio, unsigned int cantidad)
 {
     pedir(p, a, precio, cantidad);
 }
@@ -46,7 +46,7 @@ void Pedido_Articulo::mostrarDetallePedidos(std::ostream &out)
     for (auto pedido : pedido_articulos)
     {
         out << "Pedido núm. " << pedido.first->numero() << "\n"
-            << "Cliente: " << pedido.first->tarjeta().titular()->id() << "\t\t"
+            << "Cliente: " << pedido.first->tarjeta()->titular()->id() << "\t\t"
             << "Fecha: " << pedido.first->fecha() << "\n\n";
         out << detalle(*pedido.first);
         for (auto itemsPed : detalle(*pedido.first))
@@ -63,15 +63,16 @@ void Pedido_Articulo::mostrarVentasArticulos(std::ostream &out)
 {
     for (auto articulo : articulo_pedidos)
     {
-        out << "Ventas de [" << articulo.first->referencia() << "] \"" << articulo.first->titulo() << "\"\n";
+        out << "Ventas de [" << articulo.first->referencia() << "] \"" << articulo.first->titulo() << "\"\n\n";
+        out << articulo.second << std::endl;
     }
 }
 
 std::ostream &operator<<(std::ostream &out, const Pedido_Articulo::ItemsPedido &ip)
 {
     double total = 0;
-    out << "  PVP\tCantidad\tArticulo\n"
-        << Cadena(72, '=') << std::endl;
+    out << "  PVP\tCantidad\tArticulo" << std::endl
+        << "=================================================================" << std::endl;
 
     out << std::setw(2) << std::setprecision(2);
     for (auto it : ip)
@@ -79,10 +80,10 @@ std::ostream &operator<<(std::ostream &out, const Pedido_Articulo::ItemsPedido &
         out << it.second << "\t\t"
             << "[" << it.first->referencia() << "] \""
             << it.first->titulo() << "\"" << std::endl;
-        total += (*it.first).precio();
+        total += it.second.cantidad() * it.second.precio_venta();
     }
 
-    out << Cadena(72, '=') << "\n"
+    out << "=================================================================" << std::endl
         << "Total: " << std::setw(2) << std::setprecision(2) << total << " \u20AC\n"
         << std::endl;
     out << std::resetiosflags(std::ios::fixed);
@@ -94,10 +95,10 @@ std::ostream &operator<<(std::ostream &out, const Pedido_Articulo::Pedidos &ps)
     double total = 0;
     unsigned int items = 0;
 
-    out << "[Pedidos: " << ps.size() << "]\n"
-        << Cadena(72, '=') << std::endl
-        << "  PVP\tCantidad\t\tFecha de venta\n"
-        << Cadena(72, '=') << std::endl;
+    out << "[Pedidos: " << ps.size() << "]" << std::endl
+        << "=================================================================" << std::endl
+        << "  PVP\tCantidad\t\tFecha de venta" << std::endl
+        << "=================================================================" << std::endl;
 
     for (auto it : ps)
     {
@@ -105,8 +106,8 @@ std::ostream &operator<<(std::ostream &out, const Pedido_Articulo::Pedidos &ps)
         total += it.second.precio_venta() * it.second.cantidad();
         items += it.second.cantidad();
     }
-
-    out << std::setw(2) << std::setprecision(2) << total << " \u20AC \t" << items << std::endl;
+    out << "=================================================================" << std::endl
+        << std::setw(2) << std::setprecision(2) << total << " \u20AC \t" << items << std::endl;
 
     out << std::resetiosflags(std::ios::fixed);
     return out;
