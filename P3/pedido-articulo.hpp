@@ -17,8 +17,8 @@ public:
     explicit LineaPedido(double precio, unsigned int cantidad = 1) noexcept : precio_(precio),
                                                                               cantidad_(cantidad) {}
 
-    const double precio_venta() const noexcept { return precio_; }
-    const double cantidad() const noexcept { return cantidad_; }
+    double precio_venta() const noexcept { return precio_; }
+    double cantidad() const noexcept { return cantidad_; }
 
 private:
     double precio_;

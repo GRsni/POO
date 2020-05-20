@@ -19,9 +19,9 @@ std::ostream &operator<<(std::ostream &out, const LineaPedido &lp)
 
 void Pedido_Articulo::pedir(Pedido &p, Articulo &a, double precio, unsigned int cantidad)
 {
-    // LineaPedido lp(a.precio(), cantidad);
-    pedido_articulos[&p].insert(std::make_pair(&a, LineaPedido(precio, cantidad)));
-    articulo_pedidos[&a].insert(std::make_pair(&p, LineaPedido(precio, cantidad)));
+    LineaPedido lp(a.precio(), cantidad);
+    pedido_articulos[&p].insert(std::make_pair(&a, lp));
+    articulo_pedidos[&a].insert(std::make_pair(&p, lp));
 }
 
 void Pedido_Articulo::pedir(Articulo &a, Pedido &p, double precio, unsigned int cantidad)
@@ -60,7 +60,7 @@ const Pedido_Articulo::Pedidos &Pedido_Articulo::ventas(Articulo &a)
 void Pedido_Articulo::mostrarDetallePedidos(std::ostream &out)
 {
     double totalVentas = 0;
-
+    out.imbue(std::locale("es_ES.UTF-8"));
     for (auto pedido : pedido_articulos)
     {
         out << "Pedido núm. " << pedido.first->numero() << std::endl
@@ -84,8 +84,8 @@ void Pedido_Articulo::mostrarVentasArticulos(std::ostream &out)
 std::ostream &operator<<(std::ostream &out, const Pedido_Articulo::ItemsPedido &ip)
 {
     double total = 0;
-    out << "  PVP\tCantidad\tArticulo" << std::endl;
-    //    << "=================================================================" << std::endl;
+    out << "  PVP\tCantidad\tArticulo" << std::endl
+        << "=================================================================" << std::endl;
 
     out << std::setw(2) << std::setprecision(2);
     for (auto it : ip)
@@ -96,8 +96,8 @@ std::ostream &operator<<(std::ostream &out, const Pedido_Articulo::ItemsPedido &
         total += it.second.cantidad() * it.second.precio_venta();
     }
 
-    //out << "=================================================================" << std::endl
-    out << "Total: " << std::fixed << std::setprecision(2) << total << " \u20AC" << std::endl
+    out << "=================================================================" << std::endl
+        << "Total: " << std::fixed << std::setprecision(2) << total << " €" << std::endl
         << std::endl;
 
     return out;

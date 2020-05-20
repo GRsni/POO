@@ -48,7 +48,6 @@ Pedido::Pedido(Usuario_Pedido &up,
     {
         pa.pedir(*this, *c.first, c.first->precio(), c.second);
         importe += c.first->precio() * c.second;
-        std::cout << "Añadido al pedido " << c.first->titulo() << ", cantidad: " << c.second << ", precio: " << c.first->precio() * c.second << std::endl;
         c.first->stock() -= c.second; //Se reduce el stock del articulo
     }
 

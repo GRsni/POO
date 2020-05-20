@@ -16,7 +16,7 @@ std::ostream &operator<<(std::ostream &out, Articulo &A)
     std::locale::global(std::locale("es_ES.UTF-8"));
     out << std::setprecision(2)
         << "[" << A.referencia() << "] \"" << A.titulo() << "\", " << A.f_publi().anno() << ". "
-        << std::fixed << std::setprecision(2) << A.precio() << " \u20AC"
+        << std::fixed << std::setprecision(2) << A.precio() << " €"
         << std::defaultfloat;
     std::locale::global(std::locale("C"));
     return out;
