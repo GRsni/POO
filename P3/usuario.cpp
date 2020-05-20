@@ -115,6 +115,7 @@ Usuario::~Usuario() noexcept
 
 std::ostream &operator<<(std::ostream &out, const Usuario &u) noexcept
 {
+    out.imbue(std::locale("es_ES.UTF-8"));
     out << u.id() << " [" << u.contrasenna_.clave() << "] " << u.nombre() << " " << u.apellidos() << std::endl;
     out << u.direccion() << "\nTarjetas:\n";
     if (u.tarjetas_.size() > 0)
@@ -130,6 +131,7 @@ std::ostream &operator<<(std::ostream &out, const Usuario &u) noexcept
 
 std::ostream &mostrar_carro(std::ostream &out, const Usuario &u) noexcept
 {
+    out.imbue(std::locale("es_ES.UTF-8"));
     out << "Carrito de la compra de " << u.id() << " [Artículos: " << u.n_articulos() << "]" << std::endl;
     out << " Cant.  Articulo" << std::endl;
     out << Cadena(72, '=') << std::endl;

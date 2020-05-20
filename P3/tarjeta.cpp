@@ -128,6 +128,8 @@ std::ostream &operator<<(std::ostream &out, const Tarjeta &t)
 {
     int tam = t.titular()->nombre().length() + t.titular()->apellidos().length() + 2;
     Cadena titular_facial(t.titular()->nombre() + " " + t.titular()->apellidos());
+
+    out.imbue(std::locale("es_ES.UTF-8"));
     out << "+" << std::setfill(' ') << Cadena(tam + 1, '-') << "+" << std::endl
         << "| " << std::setw(tam) << std::left << t.tipo() << "|" << std::endl
         << "| " << std::setw(tam) << std::left << t.numero() << "|" << std::endl

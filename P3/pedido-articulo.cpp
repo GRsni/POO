@@ -74,6 +74,7 @@ void Pedido_Articulo::mostrarDetallePedidos(std::ostream &out)
 
 void Pedido_Articulo::mostrarVentasArticulos(std::ostream &out)
 {
+    out.imbue(std::locale("es_ES.UTF-8"));
     for (auto articulo : articulo_pedidos)
     {
         out << "Ventas de [" << articulo.first->referencia() << "] \"" << articulo.first->titulo() << "\"\n\n";
@@ -84,6 +85,7 @@ void Pedido_Articulo::mostrarVentasArticulos(std::ostream &out)
 std::ostream &operator<<(std::ostream &out, const Pedido_Articulo::ItemsPedido &ip)
 {
     double total = 0;
+    out.imbue(std::locale("es_ES.UTF-8"));
     out << "  PVP\tCantidad\tArticulo" << std::endl
         << "=================================================================" << std::endl;
 
@@ -107,7 +109,7 @@ std::ostream &operator<<(std::ostream &out, const Pedido_Articulo::Pedidos &ps)
 {
     double total = 0;
     unsigned int items = 0;
-
+    out.imbue(std::locale("es_ES.UTF-8"));
     out << "[Pedidos: " << ps.size() << "]" << std::endl
         << "=================================================================" << std::endl
         << "  PVP\tCantidad\t\tFecha de venta" << std::endl

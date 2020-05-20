@@ -60,6 +60,7 @@ Pedido::Pedido(Usuario_Pedido &up,
 
 std::ostream &operator<<(std::ostream &out, const Pedido &p)
 {
+    out.imbue(std::locale("es_ES.UTF-8"));
     out << "Núm. pedido: \t" << p.numero() << std::endl
         << "Fecha: \t\t" << p.fecha() << std::endl
         << "Pagado con: \t" << p.tarjeta()->tipo() << " n.º: " << p.tarjeta()->numero() << std::endl
