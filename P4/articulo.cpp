@@ -37,8 +37,7 @@ Libro::Libro(const Autores &A, const Cadena &ref,
 
 void Libro::impresion_especifica(std::ostream &out) const
 {
-    out.imbue(std::locale("es_ES.UTF-8"));
-    out << "\t\t" << paginas_ << " págs., " << stock() << " unidades." << std::endl;
+    out << paginas_ << " págs., " << stock_ << " unidades.";
 }
 
 Libro::~Libro() {}
@@ -49,8 +48,7 @@ Cederron::Cederron(const Autores &A, const Cadena &ref,
 
 void Cederron::impresion_especifica(std::ostream &out) const
 {
-    out.imbue(std::locale("es_ES.UTF-8"));
-    out << "\t\t" << MB << " MB, " << stock() << " unidades." << std::endl;
+    out << MB << " MB, " << stock_ << " unidades.";
 }
 
 Cederron::~Cederron() {}
@@ -61,28 +59,32 @@ LibroDigital::LibroDigital(const Autores &A, const Cadena &ref, const Cadena &ti
 
 void LibroDigital::impresion_especifica(std::ostream &out) const
 {
-    out.imbue(std::locale("es_ES.UTF-8"));
-    out << "\t\tA la venta hasta el " << expiracion << "." << std::endl;
+    out << "A la venta hasta el " << expiracion << ".";
 }
 
 LibroDigital::~LibroDigital() {}
 
 std::ostream &operator<<(std::ostream &out, const Articulo &A)
 {
-    out.imbue(std::locale("es_ES.UTF-8"));
-    out << std::setprecision(2)
-        << "[" << A.referencia() << "] \"" << A.titulo() << "\", de ";
+    setlocale(LC_ALL, "");
+
+    out << "[" << A.referencia() << "] \"" << A.titulo() << "\", de ";
+
+    int numAutores = A.autores().size();
     for (auto a : A.autores())
     {
-        out << a->apellidos() << ", ";
+        out << a->apellidos();
+        if (numAutores > 1)
+        {
+            out << ", ";
+        }
+        numAutores--;
     }
 
     out << ". " << A.f_publi().anno() << ". "
-        << std::fixed << std::setprecision(2) << A.precio() << " €"
-        << std::defaultfloat << std::endl;
+        << std::fixed << std::setprecision(2) << A.precio() << " €" << std::endl
+        << "\t";
 
     A.impresion_especifica(out);
-
-    std::locale::global(std::locale("C"));
     return out;
 }

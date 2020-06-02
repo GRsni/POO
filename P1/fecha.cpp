@@ -6,9 +6,11 @@
 
 Fecha::Fecha(int d, int m, int a) : dia_(d), mes_(m), anno_(a)
 {
+    std::tm *tiempoStruct = getTiempoDesc();
+
     if (anno_ == 0)
     {
-        anno_ = extraeAnno(getTiempoDesc());
+        anno_ = extraeAnno(tiempoStruct);
     }
     else
     {
@@ -20,7 +22,7 @@ Fecha::Fecha(int d, int m, int a) : dia_(d), mes_(m), anno_(a)
 
     if (mes_ == 0)
     {
-        mes_ = extraeMes(getTiempoDesc());
+        mes_ = extraeMes(tiempoStruct);
     }
     else
     {
@@ -32,7 +34,7 @@ Fecha::Fecha(int d, int m, int a) : dia_(d), mes_(m), anno_(a)
 
     if (dia_ == 0)
     {
-        dia_ = extraeDia(getTiempoDesc());
+        dia_ = extraeDia(tiempoStruct);
     }
     else
     {

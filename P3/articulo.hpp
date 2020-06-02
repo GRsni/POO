@@ -10,8 +10,6 @@ class Articulo
 public:
     Articulo(const Cadena &ref, const Cadena &c, const Fecha &f, double precio, unsigned int stock = 0);
 
-    //Articulo &operator=(const Articulo &A);
-
     const Cadena &referencia() const { return referencia_; };
     const Cadena &titulo() const { return titulo_; };
     const Fecha &f_publi() const { return f_publi_; };

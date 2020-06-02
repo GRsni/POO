@@ -38,7 +38,7 @@ public:
     virtual const Cadena &referencia() const { return referencia_; };
     virtual const Cadena &titulo() const { return titulo_; };
     virtual const Fecha &f_publi() const { return f_publi_; };
-    virtual const double precio() const { return precio_; };
+    virtual double precio() const { return precio_; };
     virtual double &precio() { return precio_; };
     virtual const Autores &autores() const { return autores_; }
 
@@ -69,7 +69,7 @@ public:
 
     virtual ~ArticuloAlmacenable();
 
-private:
+protected:
     unsigned int stock_;
 };
 

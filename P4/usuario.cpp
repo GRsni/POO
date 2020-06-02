@@ -4,6 +4,7 @@
 #include <cstddef>
 #include <cstring>
 #include <utility>
+#include <iomanip>
 
 #include "usuario.hpp"
 
@@ -115,8 +116,9 @@ Usuario::~Usuario() noexcept
 
 std::ostream &operator<<(std::ostream &out, const Usuario &u) noexcept
 {
-    out.imbue(std::locale("es_ES.UTF-8"));
-    out << u.id() << " [" << u.contrasenna_.clave() << "] " << u.nombre() << " " << u.apellidos() << std::endl;
+    //out.imbue(std::locale(std::locale("es_ES.UTF-8"), new sin_separador()));
+    out << u.id() << " [" << u.contrasenna_.clave() << "] " << u.nombre()
+        << " " << u.apellidos() << std::endl;
     out << u.direccion() << "\nTarjetas:\n";
     if (u.tarjetas_.size() > 0)
     {
@@ -131,17 +133,19 @@ std::ostream &operator<<(std::ostream &out, const Usuario &u) noexcept
 
 std::ostream &mostrar_carro(std::ostream &out, const Usuario &u) noexcept
 {
-    out.imbue(std::locale("es_ES.UTF-8"));
-    out << "Carrito de la compra de " << u.id() << " [Artículos: " << u.n_articulos() << "]" << std::endl;
-    out << " Cant.  Articulo" << std::endl;
-    out << Cadena(72, '=') << std::endl;
-    if (u.articulos_.size() > 0)
+    setlocale(LC_ALL, "");
+
+    out << "Carrito de la compra de " << u.id() << " [Artículos: " << u.n_articulos() << "]" << std::endl
+        << " Cant.\tArticulo" << std::endl
+        << "=================================================================" << std::endl;
+    for (auto it = u.articulos_.begin(); it != u.articulos_.end(); ++it)
     {
-        for (auto it = u.articulos_.begin(); it != u.articulos_.end(); ++it)
-        {
-            out << "   " << it->second << "       " << *it->first << std::endl;
-        }
+        out << "   " << it->second << "\t"
+            << "[" << it->first->referencia() << "] \"" << it->first->titulo()
+            << "\", " << it->first->f_publi().anno() << ". " << std::setprecision(2)
+            << std::fixed << it->first->precio() << " €" << std::endl;
     }
+
     out << std::endl;
     return out;
 }

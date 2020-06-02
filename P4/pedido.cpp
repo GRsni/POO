@@ -35,6 +35,8 @@ Pedido::Pedido(Usuario_Pedido &up,
         throw Pedido::Vacio(&u);
     }
 
+    bool carroVacio = true;
+
     for (auto a : u.compra())
     {
         if (ArticuloAlmacenable *aa = dynamic_cast<ArticuloAlmacenable *>(a.first))
@@ -44,7 +46,25 @@ Pedido::Pedido(Usuario_Pedido &up,
                 const_cast<Usuario::Articulos &>(u.compra()).clear();
                 throw Pedido::SinStock(a.first);
             }
+            carroVacio = false;
         }
+        else if (LibroDigital *ld = dynamic_cast<LibroDigital *>(a.first))
+        {
+            if (ld->f_expir() > fecha_)
+            {
+                carroVacio = false;
+            }
+        }
+        else
+        {
+            throw std::logic_error("Pedido: Clase desconocida.");
+        }
+    }
+
+    if (carroVacio)
+    {
+        const_cast<Usuario::Articulos &>(u.compra()).clear();
+        throw Pedido::Vacio(&u);
     }
 
     for (auto c : u.compra())
@@ -52,23 +72,18 @@ Pedido::Pedido(Usuario_Pedido &up,
 
         if (LibroDigital *ld = dynamic_cast<LibroDigital *>(c.first))
         {
-            if (ld->f_expir() < fecha_)
+            if (ld->f_expir() >= fecha_)
             {
+                pa.pedir(*this, *c.first, c.first->precio(), c.second);
+                importe += c.first->precio() * c.second;
             }
         }
-        else
+        else if (ArticuloAlmacenable *aa = dynamic_cast<ArticuloAlmacenable *>(c.first))
         {
             pa.pedir(*this, *c.first, c.first->precio(), c.second);
             importe += c.first->precio() * c.second;
-            if (ArticuloAlmacenable *aa = dynamic_cast<ArticuloAlmacenable *>(c.first))
-            {
-                aa->stock() -= c.second; //Se reduce el stock del articulo
-            }
+            aa->stock() -= c.second; //Se reduce el stock del articulo
         }
-    }
-    if (importe == 0)
-    {
-        throw Pedido::Vacio(&u);
     }
 
     const_cast<Usuario::Articulos &>(u.compra()).clear();
