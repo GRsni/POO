@@ -133,7 +133,6 @@ std::ostream &operator<<(std::ostream &out, const Usuario &u) noexcept
 
 std::ostream &mostrar_carro(std::ostream &out, const Usuario &u) noexcept
 {
-    setlocale(LC_ALL, "");
 
     out << "Carrito de la compra de " << u.id() << " [Artículos: " << u.n_articulos() << "]" << std::endl
         << " Cant.\tArticulo" << std::endl

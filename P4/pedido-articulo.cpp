@@ -29,7 +29,7 @@ void Pedido_Articulo::pedir(Articulo &a, Pedido &p, double precio, unsigned int 
     pedir(p, a, precio, cantidad);
 }
 
-const Pedido_Articulo::ItemsPedido &Pedido_Articulo::detalle(Pedido &p)
+const Pedido_Articulo::ItemsPedido &Pedido_Articulo::detalle(Pedido &p) noexcept
 {
     static ItemsPedido items;
     auto it = pedido_articulos.find(&p);
@@ -43,7 +43,7 @@ const Pedido_Articulo::ItemsPedido &Pedido_Articulo::detalle(Pedido &p)
     }
 }
 
-const Pedido_Articulo::Pedidos &Pedido_Articulo::ventas(Articulo &a)
+const Pedido_Articulo::Pedidos &Pedido_Articulo::ventas(Articulo &a) noexcept
 {
     static Pedidos pedidos;
     auto it = articulo_pedidos.find(&a);
@@ -57,7 +57,7 @@ const Pedido_Articulo::Pedidos &Pedido_Articulo::ventas(Articulo &a)
     }
 }
 
-void Pedido_Articulo::mostrarDetallePedidos(std::ostream &out)
+void Pedido_Articulo::mostrarDetallePedidos(std::ostream &out) noexcept
 {
     double totalVentas = 0;
     out.imbue(std::locale("es_ES.UTF-8"));
@@ -72,7 +72,7 @@ void Pedido_Articulo::mostrarDetallePedidos(std::ostream &out)
     out << "\nTOTAL VENTAS \t" << std::fixed << std::setprecision(2) << totalVentas << " €" << std::endl;
 }
 
-void Pedido_Articulo::mostrarVentasArticulos(std::ostream &out)
+void Pedido_Articulo::mostrarVentasArticulos(std::ostream &out) noexcept
 {
     out.imbue(std::locale("es_ES.UTF-8"));
     for (auto articulo : articulo_pedidos)

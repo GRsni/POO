@@ -13,11 +13,11 @@ class Autor
 public:
     Autor(const Cadena &nom,
           const Cadena &apel,
-          const Cadena &dir) : nombre_(nom), apellidos_(apel), direccion_(dir) {}
+          const Cadena &dir) noexcept : nombre_(nom), apellidos_(apel), direccion_(dir) {}
 
-    const Cadena &nombre() const { return nombre_; }
-    const Cadena &apellidos() const { return apellidos_; }
-    const Cadena &direccion() const { return direccion_; }
+    const Cadena nombre() const { return nombre_; }
+    const Cadena apellidos() const { return apellidos_; }
+    const Cadena direccion() const { return direccion_; }
 
 private:
     const Cadena nombre_, apellidos_, direccion_;
@@ -42,8 +42,7 @@ public:
     virtual double &precio() { return precio_; };
     virtual const Autores &autores() const { return autores_; }
 
-    virtual void
-    impresion_especifica(std::ostream &out) const = 0;
+    virtual void impresion_especifica(std::ostream &out) const = 0;
 
     virtual ~Articulo();
 
@@ -64,8 +63,8 @@ public:
                         const Cadena &tit, const Fecha &f, double precio,
                         unsigned int stock = 0);
 
-    const unsigned int stock() const { return stock_; };
-    unsigned int &stock() { return stock_; };
+    const unsigned int stock() const noexcept { return stock_; };
+    unsigned int &stock() noexcept { return stock_; };
 
     virtual ~ArticuloAlmacenable();
 
@@ -80,14 +79,14 @@ public:
           const Cadena &tit, const Fecha &f, double precio,
           unsigned int pags, unsigned int stock = 0);
 
-    inline unsigned int n_pag() const { return paginas_; }
+    inline unsigned int n_pag() const noexcept { return n_pag_; }
 
-    void impresion_especifica(std::ostream &out) const;
+    void impresion_especifica(std::ostream &out) const noexcept;
 
     ~Libro();
 
 private:
-    const unsigned int paginas_;
+    const unsigned int n_pag_;
 };
 
 class Cederron : public ArticuloAlmacenable
@@ -97,14 +96,14 @@ public:
              const Cadena &tit, const Fecha &f, double precio,
              unsigned int mb, unsigned int stock = 0);
 
-    inline unsigned int tam() const { return MB; }
+    inline unsigned int tam() const noexcept { return tam_; }
 
-    void impresion_especifica(std::ostream &out) const;
+    void impresion_especifica(std::ostream &out) const noexcept;
 
     ~Cederron();
 
 private:
-    const unsigned int MB;
+    const unsigned int tam_;
 };
 
 class LibroDigital : public Articulo
@@ -113,14 +112,14 @@ public:
     LibroDigital(const Autores &a, const Cadena &ref, const Cadena &tit,
                  const Fecha &f, double precio, const Fecha &exp);
 
-    const Fecha &f_expir() const { return expiracion; }
+    const Fecha &f_expir() const { return f_expir_; }
 
-    void impresion_especifica(std::ostream &out) const;
+    void impresion_especifica(std::ostream &out) const noexcept;
 
     ~LibroDigital();
 
 private:
-    const Fecha expiracion;
+    const Fecha f_expir_;
 };
 
 #endif //ARTICULO_H

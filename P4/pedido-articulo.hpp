@@ -49,11 +49,11 @@ public:
     void pedir(Pedido &p, Articulo &a, double precio, unsigned int cantidad = 1);
     void pedir(Articulo &a, Pedido &p, double precio, unsigned int cantidad = 1);
 
-    const ItemsPedido &detalle(Pedido &p);
-    const Pedidos &ventas(Articulo &a);
+    const ItemsPedido &detalle(Pedido &p) noexcept;
+    const Pedidos &ventas(Articulo &a) noexcept;
 
-    void mostrarDetallePedidos(std::ostream &out);
-    void mostrarVentasArticulos(std::ostream &out);
+    void mostrarDetallePedidos(std::ostream &out) noexcept;
+    void mostrarVentasArticulos(std::ostream &out) noexcept;
 
 private:
     std::map<Pedido *, ItemsPedido, OrdenaPedidos> pedido_articulos;

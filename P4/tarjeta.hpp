@@ -35,14 +35,14 @@ public:
     {
     public:
         Incorrecto(const Numero::Razon r) : razon_(r) {}
-        const Numero::Razon razon() const { return razon_; }
+        const Numero::Razon razon() const noexcept { return razon_; }
 
     private:
         const Numero::Razon razon_;
     };
 
     Numero(const Cadena &c);
-    operator const char *() const { return numero_.c_str(); };
+    operator const char *() const noexcept { return numero_.c_str(); };
 
 private:
     Cadena numero_;
@@ -72,7 +72,7 @@ public:
     public:
         Num_duplicado(const Numero num) : num_(num) {}
 
-        const Numero que() const { return num_; }
+        const Numero que() const noexcept { return num_; }
 
     private:
         const Numero num_;
@@ -83,7 +83,7 @@ public:
     public:
         Caducada(const Fecha f) : fecha(f) {}
 
-        const Fecha cuando() const { return fecha; }
+        const Fecha cuando() const noexcept { return fecha; }
 
     private:
         const Fecha fecha;
@@ -99,12 +99,12 @@ public:
     Tarjeta &operator=(const Tarjeta &T) = delete;
     Tarjeta &operator==(const Tarjeta &&T) = delete;
 
-    const Numero &numero() const { return numero_; }
-    const Usuario *titular() const { return titular_; }
-    const Fecha &caducidad() const { return caducidad_; }
-    bool activa() const { return activa_; }
-    bool activa(bool act = true);
-    const Tipo tipo() const;
+    const Numero &numero() const noexcept { return numero_; }
+    const Usuario *titular() const noexcept { return titular_; }
+    const Fecha &caducidad() const noexcept { return caducidad_; }
+    bool activa() const noexcept { return activa_; }
+    bool activa(bool act = true) noexcept;
+    const Tipo tipo() const noexcept;
 
     ~Tarjeta();
 
@@ -117,10 +117,10 @@ private:
     static std::set<Numero> coleccion;
 
     //anula_titular() es privado para que solo la clase Usuario (amiga) tenga acceso
-    void anula_titular();
+    void anula_titular() noexcept;
 };
 
-bool operator<(const Tarjeta &a, const Tarjeta &b);
+bool operator<(const Tarjeta &a, const Tarjeta &b) noexcept;
 
 std::ostream &operator<<(std::ostream &out, const Tarjeta::Tipo t);
 std::ostream &operator<<(std::ostream &out, const Tarjeta &T);

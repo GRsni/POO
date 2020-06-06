@@ -15,10 +15,10 @@ class Usuario_Pedido
 public:
     typedef std::set<Pedido *> Pedidos;
 
-    void asocia(Usuario &u, Pedido &p);
-    void asocia(Pedido &p, Usuario &u);
-    Pedidos &pedidos(Usuario &u);
-    Usuario *cliente(Pedido &p);
+    void asocia(Usuario &u, Pedido &p) noexcept;
+    void asocia(Pedido &p, Usuario &u) noexcept;
+    Pedidos &pedidos(Usuario &u) noexcept;
+    Usuario *cliente(Pedido &p) noexcept;
 
 private:
     typedef std::map<Usuario *, Pedidos> UP;

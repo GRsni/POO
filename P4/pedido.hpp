@@ -50,12 +50,12 @@ public:
 
     Pedido &operator=(const Pedido &p) = delete;
 
-    unsigned int numero() const { return numPed; }
-    const Tarjeta *tarjeta() const { return tarjeta_; }
-    const Fecha fecha() const { return fecha_; }
-    double total() const { return importe; }
+    unsigned int numero() const noexcept { return numPed; }
+    const Tarjeta *tarjeta() const noexcept { return tarjeta_; }
+    const Fecha fecha() const noexcept { return fecha_; }
+    double total() const noexcept { return importe; }
 
-    static unsigned int n_total_pedidos() { return contador_pedidos; }
+    static unsigned int n_total_pedidos() noexcept { return contador_pedidos; }
 
 private:
     unsigned int numPed;

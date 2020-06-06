@@ -61,44 +61,44 @@ Tarjeta::Tarjeta(const Numero &num, Usuario &us, const Fecha &f) : numero_(num),
     const_cast<Usuario *>(titular_)->es_titular_de(*this);
 }
 
-bool Tarjeta::activa(bool act)
+bool Tarjeta::activa(bool act) noexcept
 {
     activa_ = act;
     return act;
 }
 
-const Tarjeta::Tipo Tarjeta::tipo() const
+const Tarjeta::Tipo Tarjeta::tipo() const noexcept
 {
     if (numero_[0] == '3')
     {
         if (numero_[1] == '4' || numero_[1] == '7')
         {
-            return Tarjeta::Tipo::AmericanExpress;
+            return Tipo::AmericanExpress;
         }
         else
         {
-            return Tarjeta::Tipo::JCB;
+            return Tipo::JCB;
         }
     }
     else if (numero_[0] == '4')
     {
-        return Tarjeta::Tipo::VISA;
+        return Tipo::VISA;
     }
     else if (numero_[0] == '5')
     {
-        return Tarjeta::Tipo::Mastercard;
+        return Tipo::Mastercard;
     }
     else if (numero_[0] == '6')
     {
-        return Tarjeta::Tipo::Maestro;
+        return Tipo::Maestro;
     }
     else
     {
-        return Tarjeta::Tipo::Otro;
+        return Tipo::Otro;
     }
 }
 
-void Tarjeta::anula_titular()
+void Tarjeta::anula_titular() noexcept
 {
     titular_ = nullptr;
     activa_ = false;
@@ -113,7 +113,7 @@ Tarjeta::~Tarjeta()
     Tarjeta::coleccion.erase(numero_);
 }
 
-bool operator<(const Tarjeta &a, const Tarjeta &b)
+bool operator<(const Tarjeta &a, const Tarjeta &b) noexcept
 {
     return a.numero() < b.numero();
 }

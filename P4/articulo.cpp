@@ -15,7 +15,7 @@ Articulo::Articulo(const Autores &A,
 {
 
     if (autores_.empty())
-        throw Autores_vacios();
+        throw Articulo::Autores_vacios();
 }
 
 Articulo::~Articulo() {}
@@ -33,41 +33,39 @@ ArticuloAlmacenable::~ArticuloAlmacenable() {}
 Libro::Libro(const Autores &A, const Cadena &ref,
              const Cadena &tit, const Fecha &f, double precio,
              unsigned int pags, unsigned int stock) : ArticuloAlmacenable(A, ref, tit, f, precio, stock),
-                                                      paginas_(pags) {}
+                                                      n_pag_(pags) {}
 
-void Libro::impresion_especifica(std::ostream &out) const
+void Libro::impresion_especifica(std::ostream &out) const noexcept
 {
-    out << paginas_ << " págs., " << stock_ << " unidades.";
+    out << n_pag_ << " págs., " << stock_ << " unidades.";
 }
 
 Libro::~Libro() {}
 Cederron::Cederron(const Autores &A, const Cadena &ref,
                    const Cadena &tit, const Fecha &f, double precio,
                    unsigned int mb, unsigned int stock) : ArticuloAlmacenable(A, ref, tit, f, precio, stock),
-                                                          MB(mb) {}
+                                                          tam_(mb) {}
 
-void Cederron::impresion_especifica(std::ostream &out) const
+void Cederron::impresion_especifica(std::ostream &out) const noexcept
 {
-    out << MB << " MB, " << stock_ << " unidades.";
+    out << tam_ << " MB, " << stock_ << " unidades.";
 }
 
 Cederron::~Cederron() {}
 
 LibroDigital::LibroDigital(const Autores &A, const Cadena &ref, const Cadena &tit,
                            const Fecha &f, double precio, const Fecha &exp) : Articulo(A, ref, tit, f, precio),
-                                                                              expiracion(exp) {}
+                                                                              f_expir_(exp) {}
 
-void LibroDigital::impresion_especifica(std::ostream &out) const
+void LibroDigital::impresion_especifica(std::ostream &out) const noexcept
 {
-    out << "A la venta hasta el " << expiracion << ".";
+    out << "A la venta hasta el " << f_expir_ << ".";
 }
 
 LibroDigital::~LibroDigital() {}
 
 std::ostream &operator<<(std::ostream &out, const Articulo &A)
 {
-    setlocale(LC_ALL, "");
-
     out << "[" << A.referencia() << "] \"" << A.titulo() << "\", de ";
 
     int numAutores = A.autores().size();
